@@ -1,0 +1,9 @@
+{
+  "root": "./docs",
+  "title": "EJS Static Site Docs",
+  "author": "max@seam.es",
+  "language": "en",
+  "plugins": [
+    "code"
+  ]
+}
