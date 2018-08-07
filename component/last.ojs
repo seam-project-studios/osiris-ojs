@@ -1,0 +1,6 @@
+<h1>start last.ojs</h1>
+<p>Template in template test, scope test</p>
+<p>wait = <?=typeof wait ?></p>
+<p>locals.test = <?=JSON.stringify(locals.test) ?></p>
+<p>getter test <?=get['test'] ?>
+<h1>end last.ojs</h1>

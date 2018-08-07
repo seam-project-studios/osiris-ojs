@@ -1,17 +1,21 @@
 const HTTP_PORT = process.env.HTTP_PORT || 4682;
 
+// general purpose
+const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
+
 // express engine
 const express = require('express');
 const app = express();
-
-const url = require('url'); // parse query strings
-const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 
 const bodyParser = require('body-parser'); // parse post data
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-const Instance = require('./instance'); // our render engine constructor
+// our render engine constructor
+const Instance = require('./instance');
+
+// our template addons
+const ojsExpress = require('./express');
 
 const main = async () => {
   app.use(express.static('template')); // serve template folder
@@ -29,10 +33,9 @@ const main = async () => {
 
     res.header('content-type', 'text/html'); // we have something
 
-    // setup variable scope for templates
-    const qs = url.parse(req.url, true).query;
+    // call renderer with our addons
     await new Instance(res).render('./template/' + filename + '.ojs', {
-      get: (param) => qs[param] || null,
+      ...ojsExpress(req, res), // this gives templates access to get(), post(), header() and headerSent()
     });
   });
 

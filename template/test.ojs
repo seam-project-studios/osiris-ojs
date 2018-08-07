@@ -1,0 +1,21 @@
+<h1>start test.ojs</h1>
+<?
+// Variable test
+locals.test = get['test'] || 'test123';
+?>
+<p>Sequence (pipeline) test</p>
+<p>1) <?="string output 1" ?><p>
+
+<p>2) <?=print("function test 1") ?></p>
+
+<p>3) <?=() => 'test' ?>
+
+<?=require('other.ojs'); ?>
+
+<p>4) <?=print("function test 2") ?></p>
+
+<p>5) <?="string output 2" ?></p>
+
+<p>6) <?=get['test'] ?>
+
+<h1>end test.ojs</h1>
