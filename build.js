@@ -6,7 +6,7 @@ const templateFolder = './template/';
 
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 
-const Instance = require('./instance'); // ejs renderer constructor
+const osiris = require('./instance'); // renderer
 
 // fancy progress bars
 const ProgressBar = require('progress');
@@ -64,7 +64,7 @@ const main = async () => {
 
           // set up template scope
           bar.tick(1, {filename, task:'Initiating renderer'});
-          const instance = new Instance(writeFile);
+          const instance = osiris(writeFile);
 
           // run the renderer, feeding the data into our files writeStream
           bar.tick(1, {filename, task:'Rendering'});
@@ -76,7 +76,7 @@ const main = async () => {
           bar.tick(2, {filename, task:'Rendering'});
           await fs.writeFile(
             buildFolder + name,
-            await new Instance().render(file, {
+            await osiris().render(file, {
               get: () => 'what?'
             })
           );

@@ -11,8 +11,8 @@ const bodyParser = require('body-parser'); // parse post data
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// our render engine constructor
-const Instance = require('./instance');
+// our render engine
+const osiris = require('./instance');
 
 // our template addons
 const ojsExpress = require('./express');
@@ -34,7 +34,7 @@ const main = async () => {
     res.header('content-type', 'text/html'); // we have something
 
     // call renderer with our addons, we can block here with await if we need any clean up after render
-    await new Instance(res).render('./template/' + filename + '.ojs', {
+    await osiris(res).render('./template/' + filename + '.ojs', {
       ...ojsExpress(req, res), // this gives templates access to get, post, header() and headerSent
     });
     // render complete, res.end() sent, clean up

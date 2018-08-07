@@ -6,7 +6,7 @@ ejs.delimiter = '?';
 const streamBuffers = require('stream-buffers');
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
-const Instance = module.exports = function (writeStream) {
+const Instance = function (writeStream) {
   // use memory buffered writeStream if none is provided
   if (!writeStream) writeStream = new streamBuffers.WritableStreamBuffer();
 
@@ -54,3 +54,5 @@ const Instance = module.exports = function (writeStream) {
 
   this.locals = {}; // for passing variables between templates
 };
+
+module.exports = (...args) => new Instance(...args);
