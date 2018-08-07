@@ -57,7 +57,7 @@ const main = async () => {
       const name = filename.substr(0,doti);
 
       bar.tick(1, {filename, task:'Preparing to write'});
-      if (ext.toLowerCase() === 'ejs') {
+      if (ext.toLowerCase() === 'ojs') {
         if ('streamy way') {
           // a file for our template engine, open something for it to write to
           let writeFile = fs.createWriteStream(buildFolder + name); // no file extension

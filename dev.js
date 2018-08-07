@@ -23,7 +23,7 @@ const main = async () => {
       filename = 'index'; // default page for directory index
     }
 
-    if (!await fs.exists('./template/' + filename + '.ejs')) {
+    if (!await fs.exists('./template/' + filename + '.ojs')) {
       return next(); // so close, doesn't exist
     }
 
@@ -31,7 +31,7 @@ const main = async () => {
 
     // setup variable scope for templates
     const qs = url.parse(req.url, true).query;
-    await new Instance(res).render('./template/' + filename + '.ejs', {
+    await new Instance(res).render('./template/' + filename + '.ojs', {
       get: (param) => qs[param] || null,
     });
   });
