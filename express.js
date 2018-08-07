@@ -4,12 +4,13 @@ const OjsExpress = function(req, res) {
   // private variables
   const getVars = url.parse(req.url, true).query || {};
   const postVars = req.body || {};
-  const headerSent = false;
+  let headerSent = false;
 
   // exposed function
-  this.header = (headerString) => {
+  this.header = (...args) => {
     headerSent = true;
-    return res.header(headerString);
+    res.header(...args);
+    return '';
   };
 
   // exposed variables

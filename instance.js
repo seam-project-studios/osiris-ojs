@@ -1,9 +1,16 @@
-'use strict';
-
 const ejs = require('./ejs-promise/ejs');
 ejs.delimiter = '?';
 
 const streamBuffers = require('stream-buffers');
+
+const copyScopes = (obj, scopes) => {
+  if (!Array.isArray(scopes)) scopes = [scopes];
+  for (let copy of scopes) for (let i of Object.keys(copy)) {
+    if (obj[i]) continue; // copy but don't overwrite scope to this
+    Object.defineProperty(obj, i, Object.getOwnPropertyDescriptor(copy, i));
+  }
+  return obj;
+};
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Instance = function (writeStream) {
@@ -13,7 +20,9 @@ const Instance = function (writeStream) {
   // our render function, ejs needs a filename, an object representing local scope and some options
   // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
   const render = (filename, scope = {}) => new Promise((resolve, reject) => {
-    ejs.renderFile(filename, {...scope, ...this }, { filename, context: {}, }, (err, p) => {
+    copyScopes(this, scope);
+
+    ejs.renderFile(filename, this, { filename, context: {}, }, (err, p) => {
       // p is a promise/writeableStream from ejs layer
       if (err) return reject(err);
 
@@ -27,14 +36,11 @@ const Instance = function (writeStream) {
     });
   });
 
-  this.render = async (filename, scope) => {
+  this.render = async (filename, ...scopes) => {
     delete this.render; // run once
-    for (let i of Object.keys(scope)) {
-      // copy but don't overwrite scope to this
-      if (!this[i]) this[i] = scope[i];
-    }
-    Object.freeze(this);
-    let html = await render(filename);
+
+    // Object.freeze(this);
+    let html = await render(filename, scopes);
     writeStream.end(); // we're done
 
     if (writeStream.getContents) return writeStream.getContents(); // patch for streamBuffers

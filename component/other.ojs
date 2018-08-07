@@ -27,6 +27,8 @@ for (let x=0; x<10; x++) {
 ?>
 </ol>
 
+<p>Header sent <?=headerSent ?>
+
 <?=require('last.ojs'); ?>
 
 <h1>end other.ojs</h1>

@@ -1,3 +1,4 @@
+<?=header('content-type', 'text/plain') ?>
 <h1>start test.ojs</h1>
 <?
 // Variable test
@@ -8,7 +9,7 @@ locals.test = get['test'] || 'test123';
 
 <p>2) <?=print("function test 1") ?></p>
 
-<p>3) <?=() => 'test' ?>
+<p>3) <?=(() => 'test')() ?>
 
 <?=require('other.ojs'); ?>
 
@@ -17,5 +18,11 @@ locals.test = get['test'] || 'test123';
 <p>5) <?="string output 2" ?></p>
 
 <p>6) <?=get['test'] ?>
+
+<p>7) Header sent <?=headerSent ?>
+
+<p>8) locals.test = <?=locals.test ?>
+
+<p>9) customFunc = <?=customFunc() ?>
 
 <h1>end test.ojs</h1>
