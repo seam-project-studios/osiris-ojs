@@ -1,6 +1,6 @@
 {
-  "name": "seam-ejs",
-  "version": "1.0.0",
+  "name": "osiris-ojs",
+  "version": "1.0.1",
   "author": "SEAM PROJECT STUDIOS S,L",
   "license": "ISC",
   "main": "instance.js",
