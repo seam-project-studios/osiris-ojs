@@ -35,6 +35,6 @@
       "build/",
       "_book/"
     ],
-    "ext": "js,json,ejs"
+    "ext": "js,json,ojs"
   }
 }

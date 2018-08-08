@@ -3,15 +3,13 @@ const localesFolder = './locales/';
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const asyncRequire = require('async-require');
 
-// recurse down a file system tree running a callback for each file and folder
-const recurseFs = async (root, file, beforeFolder, afterFolder) => {
+// recurse down a file system tree running a callback for each file
+const recurseFiles = async (root, file) => {
   let d = await fs.readdir(root);
   for (let f of d) {
     let stat = await fs.stat(root + f);
     if (stat.isDirectory(root + f)) {
-      if (beforeFolder) await beforeFolder(root + f + '/');
-      await recurseFs(root + f + '/', file, beforeFolder, afterFolder);
-      if (afterFolder) await afterFolder(root + f + '/');
+      await recurseFiles(root + f + '/', file);
     }
     if (stat.isFile(root + f)) {
       if (file) await file(root + f);
@@ -43,7 +41,7 @@ module.exports = new Promise(async (res, rej) => {
   if (state === 'init') {
     state = 'loading'; // one loading 'thread' only please
 
-    await recurseFs(localesFolder, (file) => {
+    await recurseFiles(localesFolder, (file) => {
       const filename = file.substr(localesFolder.length);
       // extract file name information "name.ext"
       const doti = filename.lastIndexOf('.');
