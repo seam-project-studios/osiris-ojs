@@ -7,7 +7,8 @@ const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const express = require('express');
 const app = express();
 
-const bodyParser = require('body-parser'); // parse post data
+ // parse post data into req.body
+const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -16,6 +17,7 @@ const osiris = require('./instance');
 
 // our template addons
 const ojsExpress = require('./express');
+const ojsi18n = require('./i18n');
 
 const main = async () => {
   app.use(express.static('template')); // serve template folder
@@ -36,6 +38,7 @@ const main = async () => {
     // call renderer with our addons, we can block here with await if we need any clean up after render
     await osiris(res).render('./template/' + filename + '.ojs',
       ojsExpress(req, res), // this gives templates access to get, post, header() and headerSent
+      ojsi18n('en-GB'), // localization
       {
         customFunc: () => 'customAnswer'
       }
