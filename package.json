@@ -6,8 +6,8 @@
   "main": "instance.js",
   "description": "",
   "scripts": {
-    "dev": "concurrently \"nodemon dev.js --ignore template/\" \"npm run docs\"",
-    "static": "concurrently \"nodemon static.js\" \"npm run docs\"",
+    "dev": "concurrently \"nodemon dev.js --ignore template/\"",
+    "static": "concurrently \"nodemon static.js\"",
     "build": "node build.js",
     "docs": "gitbook install && gitbook serve"
   },
