@@ -27,7 +27,7 @@ for (let x=0; x<10; x++) {
 ?>
 </ol>
 
-<p>Header sent <?=headerSent ?>
+<p>Header sent <?=express.headerSent ?>
 
 <?=require('last.ojs'); ?>
 

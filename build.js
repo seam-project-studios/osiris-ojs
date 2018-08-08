@@ -7,6 +7,7 @@ const templateFolder = './template/';
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 
 const osiris = require('./instance'); // renderer
+const ojsi18n = require('./i18n');
 
 // fancy progress bars
 const ProgressBar = require('progress');
@@ -37,11 +38,9 @@ const main = async () => {
 
   // delete previous build
   await recurseFs(buildFolder,
-    async (file) => {
-      await fs.unlink(file);
-    }, false, async (folder) => {
-      await fs.rmdir(folder);
-    }
+    (file) => fs.unlink(file),
+    false, // prefolder
+    (folder) => fs.rmdir(folder) // post folder
   );
 
   // run build
@@ -58,6 +57,16 @@ const main = async () => {
 
       bar.tick(1, {filename, task:'Preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
+        let scopes = {
+          express: {
+            get: {},
+            post: {},
+            header: () => '',
+          },
+          i18n: ojsi18n('en-GB'),
+          customFunc: () => 'custom answer',
+        };
+
         if ('streamy way') {
           // a file for our template engine, open something for it to write to
           let writeFile = fs.createWriteStream(buildFolder + name); // no file extension
@@ -68,17 +77,13 @@ const main = async () => {
 
           // run the renderer, feeding the data into our files writeStream
           bar.tick(1, {filename, task:'Rendering'});
-          await instance.render(file, {
-            get: () => 'what?'
-          });
+          await instance.render(file, scopes);
         } else if ('returny way') {
           // set up template scope
           bar.tick(2, {filename, task:'Rendering'});
           await fs.writeFile(
             buildFolder + name,
-            await osiris().render(file, {
-              get: () => 'what?'
-            })
+            await osiris().render(file, scopes)
           );
         }
 

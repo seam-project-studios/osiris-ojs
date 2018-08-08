@@ -1,8 +1,8 @@
-<?=header('content-type', 'text/plain') ?>
+<?=express.header('content-type', 'text/plain') ?>
 <h1>start test.ojs</h1>
 <?
 // Variable test
-locals.test = get['test'] || 'test123';
+locals.test = express.get['test'] || 'test123';
 ?>
 <p>Sequence (pipeline) test</p>
 <p>1) <?="string output 1" ?><p>
@@ -17,9 +17,9 @@ locals.test = get['test'] || 'test123';
 
 <p>5) <?="string output 2" ?></p>
 
-<p>6) <?=get['test'] ?>
+<p>6) <?=express.get['test'] ?>
 
-<p>7) Header sent <?=headerSent ?>
+<p>7) Header sent <?=express.headerSent ?>
 
 <p>8) locals.test = <?=locals.test ?>
 

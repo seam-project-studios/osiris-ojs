@@ -1,24 +1,24 @@
 <h1>Language tests</h1>
 
 <h2>Text tests</h2>
-<p><?=t('test.welcome') ?></p>
-<p><?=t('we.must.go.deeper.and.deeper') ?></p>
+<p><?=i18n.t('test.welcome') ?></p>
+<p><?=i18n.t('we.must.go.deeper.and.deeper') ?></p>
 
 <h2>Number tests</h2>
-<p>123456 = <?=n(123456) ?></p>
+<p>123456 = <?=i18n.n(123456) ?></p>
 
 <h2>Date tests</h2>
 <p>
   Unix epoch { weekday: 'long', era: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'long' }<br/>
-  <?=d(new Date(0), { weekday: 'long', era: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'long' }) ?>
+  <?=i18n.d(new Date(0), { weekday: 'long', era: 'short', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZoneName: 'long' }) ?>
 </p>
 
 <p>
   Now<br/>
-  <?=d(new Date()) ?>
+  <?=i18n.d(new Date()) ?>
 </p>
 
 <p>
   Now  { weekday: 'short', year: '2-digit', month: '2-digit', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }<br/>
-  <?=d(new Date(), { weekday: 'short', year: '2-digit', month: '2-digit', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) ?>
+  <?=i18n.d(new Date(), { weekday: 'short', year: '2-digit', month: '2-digit', day: '2-digit', hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }) ?>
 </p>
