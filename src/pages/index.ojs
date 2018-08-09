@@ -1,1 +1,6 @@
-<h1>start Index.ojs</h1>
+<?=snippet('header', {title: 'osiris examples'}) ?>
+<h2>Example code</h2>
+<ul>
+  <li><a href="/examples/scope">scope</a></li>
+  <li><a href="/examples/i18n">i18n</a></li>
+</ul>

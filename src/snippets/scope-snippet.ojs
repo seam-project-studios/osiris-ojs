@@ -1,0 +1,47 @@
+<p>start other.ojs</p>
+
+<?
+// wait msec and resolve to msec
+const wait = (msec) => new Promise((res, rej) => {
+  setTimeout(() => res(msec), msec);
+});
+
+// generate a random number
+const rand = () => Math.round(Math.random()*10);
+?>
+
+<p>Sequencing with async and print</p>
+<ol>
+<?
+for (let x=1; x<=10; x++) {
+  let y = yield wait(rand()); // yield replaces async
+  yield print('<li>'+ x +' took ' + y + ' msec</li>');
+}
+?>
+</ol>
+
+<p>Sequencing with async and tags</p>
+<ol>
+<?
+for (let x=1; x<=10; x++) {
+?>
+  <li><?=x ?> took <?=wait(rand()) ?></li>
+<?
+}
+?>
+</ol>
+
+<p>Out of sequence example, *dangerous*</p>
+<ol>
+<?
+for (let x=1; x<=10; x++) {
+  wait(rand()).then(y => print('<li>'+ x +' took ' + y + ' msec</li>'));
+}
+yield wait(10); // to make sure it finished
+?>
+</ol>
+
+
+<?=snippet('scope-last') ?>
+
+<p>end other.ojs</p>

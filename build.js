@@ -57,13 +57,17 @@ const main = async () => {
 
       bar.tick(1, {filename, task:'Preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
+        // setup localization
+        let i18n = await ojsi18n('en-GB');
+        // console.log(i18n.locales); // we can inspect the available locales here
+
         let scopes = {
           express: {
             get: {},
             post: {},
             header: () => '',
           },
-          i18n: await ojsi18n('en-GB'),
+          i18n,
           customFunc: () => 'custom answer',
         };
 

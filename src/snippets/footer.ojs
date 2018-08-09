@@ -1,0 +1,4 @@
+   <style><?=footerCss() ?></style>
+   <script><?=footerJs() ?></script>
+  </body>
+</html>

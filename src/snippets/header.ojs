@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><?=args.title || 'Title here' ?></title>
+  </head>
+  <body>
+    <a href="/">Osiris</a>
+    <hr />
+    <h1><?=args.title || 'Title here' ?></h1>

@@ -1,0 +1,25 @@
+<?=snippet('header', {title: 'Scoping examples'}) ?>
+
+<p>start scope.ojs</p>
+<?
+// Variable test
+locals.test = 'test123';
+?>
+<p>Sequence (pipeline) test</p>
+<ol>
+  <li>tag print <?="string output 1" ?></li>
+  <li>function printing <?=print("function test 1") ?></li>
+  <li>js function resolving inline <?=(() => 'test')() ?></li>
+</ol>
+
+<p>snippet interjection</p>
+<?=snippet('scope-snippet') ?>
+<p>snippet finished</p>
+
+<ol>
+  <li><?=print("function test 2") ?></li>
+  <li><?="string output 2" ?></li>
+  <li>locals.test = <?=locals.test ?></li>
+  <li>customFunc = <?=customFunc() ?></li>
+</ol>
+<p>end scope.ojs</p>

@@ -37,7 +37,7 @@ const main = async () => {
 
     // setup localization
     let i18n = await ojsi18n('en-GB');
-    console.log(i18n.locales);
+    // console.log(i18n.locales); // we can inspect the available locales here
 
     // call renderer with our addons, we can block here with await if we need any clean up after render
     await osiris(res).render('./src/pages/' + filename + '.ojs', {

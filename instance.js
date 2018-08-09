@@ -54,20 +54,40 @@ const Instance = function (writeStream) {
 
   this.locals = {}; // for passing variables between templates
 
-
   // osiris component layer
+
+  // html snippets
   this.snippet = async (filename, args) => {
     // render a snippet
     await render('./src/snippets/' + filename + '.ojs', { args });
     return '';
   };
 
+  // html elements
   this.element = async (filename, args) => {
     // render an element
     await render('./src/elements/' + filename + '.ojs', { args });
     return '';
   };
 
+  // collection points for js and css
+  let jsCollection = [];
+  this.js = (str) => {
+    jsCollection.push(str);
+    return '';
+  };
+  this.footerJs = () => {
+    return jsCollection.join("\n");
+  };
+
+  let cssCollection = [];
+  this.css = (str) => {
+    cssCollection.push(str);
+    return '';
+  };
+  this.footerCss = () => {
+    return cssCollection.join("\n");
+  };
 };
 
 module.exports = (...args) => new Instance(...args);
