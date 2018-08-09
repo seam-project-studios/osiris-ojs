@@ -1,6 +1,59 @@
+// params
+const localesFolder = './locales/';
+
 // general purpose
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
-let textLocales = require('./locales/');
+const asyncRequire = require('async-require');
+
+// recurse down a file system tree running a callback for each file
+const recurseFiles = async (root, file) => {
+  let d = await fs.readdir(root);
+  for (let f of d) {
+    let stat = await fs.stat(root + f);
+    if (stat.isDirectory(root + f)) {
+      await recurseFiles(root + f + '/', file);
+    }
+    if (stat.isFile(root + f)) {
+      if (file) await file(root + f);
+    }
+  }
+};
+
+let data = {};
+
+const addNode = (path, ext) => {
+  let ref = data;
+  let chunks = path.split('/');
+  let filename = chunks.pop();
+
+  for (let chunk of chunks) {
+    if (!ref[chunk]) ref[chunk] = {};
+    ref = ref[chunk];
+  }
+  if (ext === 'js') {
+    ref[filename] = () => asyncRequire(localesFolder + path);
+  } else if (ext === 'json') {
+    ref[filename] = async () => JSON.parse(await fs.readFile(localesFolder + path+'.'+ext));
+  }
+};
+
+const textLocales = new Promise(async (res, rej) => {
+  await recurseFiles(localesFolder, (file) => {
+    const filename = file.substr(localesFolder.length);
+    // extract file name information "name.ext"
+    const doti = filename.lastIndexOf('.');
+    const ext = filename.substr(doti+1).toLowerCase();
+    const name = filename.substr(0,doti);
+
+    if (name === 'index') return; // this file
+
+    if (ext === 'js' || ext === 'json') {
+      // only require() js and json files
+      addNode(name, ext);
+    }
+  });
+  res(data);
+});
 
 const traverseObj = async (obj, path) => {
   let ref = obj;
