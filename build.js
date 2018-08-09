@@ -63,7 +63,7 @@ const main = async () => {
             post: {},
             header: () => '',
           },
-          i18n: ojsi18n('en-GB'),
+          i18n: await ojsi18n('en-GB'),
           customFunc: () => 'custom answer',
         };
 

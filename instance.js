@@ -30,7 +30,7 @@ const Instance = function (writeStream) {
         p.noBuffer(); // don't hold data in buffers
         p.waitFlush(); // wait for our writeStream to flush before asking for more data from template engine
       }
-      p.outputStream.pipe(writeStream, {end: false}); // pipe our output, don't close the stream when finished (we might just be a require() in a template)
+      p.outputStream.pipe(writeStream, {end: false}); // pipe our output, don't close the stream when finished (we might just be an include in a template)
 
       resolve(p); // we've resolved, but the actual resolver isn't called until p has resolved (the template has finished rendering)
     });
@@ -47,24 +47,27 @@ const Instance = function (writeStream) {
     return html;
   };
 
-  this.snippet = async (filename, args) => {
-    // render a template within a template
-    await render('./src/snippets/' + filename + '.ojs', { args });
-    return '';
-  };
-
-  this.element = async (filename, args) => {
-    // render a template within a template
-    await render('./src/elements/' + filename + '.ojs', { args });
-    return '';
-  };
-
   this.print = (text) => {
     // write directly to stream, return empty string
     return new Promise((res, rej) => writeStream.write(text, () => res('')));
   };
 
   this.locals = {}; // for passing variables between templates
+
+
+  // osiris component layer
+  this.snippet = async (filename, args) => {
+    // render a snippet
+    await render('./src/snippets/' + filename + '.ojs', { args });
+    return '';
+  };
+
+  this.element = async (filename, args) => {
+    // render an element
+    await render('./src/elements/' + filename + '.ojs', { args });
+    return '';
+  };
+
 };
 
 module.exports = (...args) => new Instance(...args);

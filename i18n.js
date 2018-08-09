@@ -110,4 +110,8 @@ const OjsI18n = function(localeString) {
   });
 };
 
-module.exports = (...args) => new OjsI18n(...args);
+module.exports = async (...args) => {
+  const ret = new OjsI18n(...args);
+  await textLocales;
+  return ret;
+};

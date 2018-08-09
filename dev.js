@@ -35,10 +35,14 @@ const main = async () => {
 
     res.header('content-type', 'text/html'); // we have something
 
+    // setup localization
+    let i18n = await ojsi18n('en-GB');
+    console.log(i18n.locales);
+
     // call renderer with our addons, we can block here with await if we need any clean up after render
     await osiris(res).render('./src/pages/' + filename + '.ojs', {
       express: ojsExpress(req, res), // this gives templates access to get, post, header() and headerSent
-      i18n: ojsi18n('en-GB'), // localization
+      i18n, // localization
       customFunc: () => 'customAnswer'
     });
     // render complete, res.end() sent, clean up
