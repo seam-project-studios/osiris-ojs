@@ -7,10 +7,9 @@ const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const express = require('express');
 const app = express();
 
- // parse post data into req.body
+// parse post data into req.body
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 // our render engine
 const osiris = require('./instance');
@@ -22,7 +21,7 @@ const ojsi18n = require('./i18n');
 const main = async () => {
   app.use(express.static('src/pages/')); // serve pages folder
 
-  app.use('/', async (req, res, next) => { // anything not served lands here
+  app.use(async (req, res, next) => { // anything not served lands here
     let filename = req.path.substr(1); // trim starting /
 
     if (filename === '') {

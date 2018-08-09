@@ -2,13 +2,11 @@ const url = require('url'); // parse query strings
 
 const OjsExpress = function(req, res) {
   // private variables
-  const getVars = url.parse(req.url, true).query || {};
-  const postVars = req.body || {};
-  let headerSent = false;
+  const getVars = url.parse(req.url, true).query;
+  const postVars = req.body;
 
   // exposed function
   this.header = (...args) => {
-    headerSent = true;
     res.header(...args);
     return '';
   };
@@ -17,7 +15,7 @@ const OjsExpress = function(req, res) {
   Object.defineProperties(this, {
     get: { enumerable: true, value: getVars },
     post: { enumerable: true, value: postVars },
-    headerSent: { enumerable: true, get: () => headerSent }, // ensure we get the live value
+    headersSent: { enumerable: true, get: () => res.headersSent }, // ensure we get the live value
   });
 };
 
