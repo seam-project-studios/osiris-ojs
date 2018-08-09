@@ -2,7 +2,7 @@
 // will run build process if called directly
 
 const buildFolder = './build/';
-const templateFolder = './template/';
+const templateFolder = './src/pages/';
 
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 

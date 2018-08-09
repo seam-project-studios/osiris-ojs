@@ -20,7 +20,7 @@ const ojsExpress = require('./express');
 const ojsi18n = require('./i18n');
 
 const main = async () => {
-  app.use(express.static('template')); // serve template folder
+  app.use(express.static('src/pages/')); // serve pages folder
 
   app.use('/', async (req, res, next) => { // anything not served lands here
     let filename = req.path.substr(1); // trim starting /
@@ -29,14 +29,14 @@ const main = async () => {
       filename = 'index'; // default page for directory index
     }
 
-    if (!await fs.exists('./template/' + filename + '.ojs')) {
+    if (!await fs.exists('./src/pages/' + filename + '.ojs')) {
       return next(); // so close, doesn't exist
     }
 
     res.header('content-type', 'text/html'); // we have something
 
     // call renderer with our addons, we can block here with await if we need any clean up after render
-    await osiris(res).render('./template/' + filename + '.ojs', {
+    await osiris(res).render('./src/pages/' + filename + '.ojs', {
       express: ojsExpress(req, res), // this gives templates access to get, post, header() and headerSent
       i18n: ojsi18n('en-GB'), // localization
       customFunc: () => 'customAnswer'

@@ -1,5 +1,7 @@
 <h1>Language tests</h1>
 
+<p><?=i18n.locales.join(',') ?></p>
+
 <h2>Text tests</h2>
 <p><?=i18n.t('test.welcome') ?></p>
 <p><?=i18n.t('we.must.go.deeper.and.deeper') ?></p>

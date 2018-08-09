@@ -11,7 +11,7 @@ locals.test = express.get['test'] || 'test123';
 
 <p>3) <?=(() => 'test')() ?>
 
-<?=require('other.ojs'); ?>
+<?=snippet('other'); ?>
 
 <p>4) <?=print("function test 2") ?></p>
 

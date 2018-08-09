@@ -47,9 +47,15 @@ const Instance = function (writeStream) {
     return html;
   };
 
-  this.require = async (filename, scope) => {
+  this.snippet = async (filename, args) => {
     // render a template within a template
-    await render('./component/' + filename, scope);
+    await render('./src/snippets/' + filename + '.ojs', { args });
+    return '';
+  };
+
+  this.element = async (filename, args) => {
+    // render a template within a template
+    await render('./src/elements/' + filename + '.ojs', { args });
     return '';
   };
 

@@ -1,5 +1,5 @@
 // params
-const localesFolder = './locales/';
+const localesFolder = './src/locales/';
 
 // general purpose
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
@@ -19,9 +19,12 @@ const recurseFiles = async (root, file) => {
   }
 };
 
+// a json object representing the i18n text mappings
 let data = {};
 
+// find the place in `data` and add a node
 const addNode = (path, ext) => {
+  // traverse ref down the object chain until you arrive at the last node
   let ref = data;
   let chunks = path.split('/');
   let filename = chunks.pop();
@@ -30,10 +33,12 @@ const addNode = (path, ext) => {
     if (!ref[chunk]) ref[chunk] = {};
     ref = ref[chunk];
   }
+
+  // depending on file type we need to import it differently
   if (ext === 'js') {
-    ref[filename] = () => asyncRequire(localesFolder + path);
+    ref[filename] = () => asyncRequire(localesFolder + path); // returns a promise
   } else if (ext === 'json') {
-    ref[filename] = async () => JSON.parse(await fs.readFile(localesFolder + path+'.'+ext));
+    ref[filename] = async () => JSON.parse(await fs.readFile(localesFolder + path+'.'+ext)); // returns a promise
   }
 };
 
@@ -101,6 +106,7 @@ const OjsI18n = function(localeString) {
   // exposed variables
   Object.defineProperties(this, {
     locale: { enumerable: true, get: () => locale },
+    locales: { enumerable: true, get: () => Object.keys(data) },
   });
 };
 

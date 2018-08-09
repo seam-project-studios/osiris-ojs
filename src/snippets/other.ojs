@@ -29,6 +29,6 @@ for (let x=0; x<10; x++) {
 
 <p>Header sent <?=express.headerSent ?>
 
-<?=require('last.ojs'); ?>
+<?=snippet('last'); ?>
 
 <h1>end other.ojs</h1>
