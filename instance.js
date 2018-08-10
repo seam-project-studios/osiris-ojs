@@ -62,7 +62,7 @@ const Instance = function (writeStream) {
     '"': '&#34;',
     "'": '&#39;',
   };
-  this.q = (str) => str.split('').map(c => qMap[c] || c).join('');
+  this.q = (str='') => str.split('').map(c => qMap[c] || c).join('');
 
   // osiris component layer
 

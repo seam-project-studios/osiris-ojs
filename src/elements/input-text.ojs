@@ -12,5 +12,11 @@ console.log('input-text', '${JSON.stringify(args)}');
 
 <label>
   <?=args.label || '' ?>
-  <input type="text" name="<?=args.name || '' ?>" id="<?=args.id || '' ?>" title="<?=args.title || '' ?>" />
+  <input
+    type="text"
+    name="<?=args.name || '' ?>"
+    id="<?=args.id || '' ?>"
+    title="<?=q(args.title) ?>"
+    value="<?=q(args.value) ?>"
+  />
 </label>
