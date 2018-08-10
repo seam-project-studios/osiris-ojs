@@ -7,9 +7,10 @@ locals.test = 'test123';
 ?>
 <p>Sequence (pipeline) test</p>
 <ol>
-  <li>tag print <?="string output 1" ?></li>
-  <li>function printing <?=print("function test 1") ?></li>
-  <li>js function resolving inline <?=(() => 'test')() ?></li>
+  <li>tag print <?="<strong>html string output 1</strong>" ?></li>
+  <li>function printing <?=print("<strong>html function test 1</strong>") ?></li>
+  <li>js function resolving inline <?=(() => '<strong>test</strong>')() ?></li>
+  <li>quoted test <?=q('<strong>test</strong>') ?></li>
   <li title="<?=q('"Quoted text, html brackets < >"') ?>">escaping entities: "=<?=q('"') ?>, '=<?=q("'") ?></li>
 </ol>
 

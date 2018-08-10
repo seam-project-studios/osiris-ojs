@@ -8,13 +8,13 @@ js('console.log("Hi!");');
 
 <p>
   <a href='?test=query&string=here'>express.get</a>
-  = <?=JSON.stringify(express.get) ?>
+  = <?=q(JSON.stringify(express.get)) ?>
 </p>
 <p>
   <form method="post" action="?">
     <input type="hidden" name="posted" value="data">
     <button type="submit">express.post</button>
-  = <?=JSON.stringify(express.post) ?>
+  = <?=q(JSON.stringify(express.post)) ?>
   </form>
 </p>
 
