@@ -71,22 +71,22 @@ const Instance = function (writeStream) {
   };
 
   // collection points for js and css
-  let jsCollection = [];
+  let jsBundle = [];
   this.js = (str) => {
-    jsCollection.push(str);
+    jsBundle.push(str);
     return '';
   };
-  this.footerJs = () => {
-    return jsCollection.join("\n");
+  this.bundleJs = () => {
+    return jsBundle.join("\n");
   };
 
-  let cssCollection = [];
+  let cssBundle = [];
   this.css = (str) => {
-    cssCollection.push(str);
+    cssBundle.push(str);
     return '';
   };
-  this.footerCss = () => {
-    return cssCollection.join("\n");
+  this.bundleCss = () => {
+    return cssBundle.join("\n");
   };
 };
 

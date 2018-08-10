@@ -1,4 +1,4 @@
-   <style><?=footerCss() ?></style>
-   <script><?=footerJs() ?></script>
+   <style><?=bundleCss() ?></style>
+   <script><?=bundleJs() ?></script>
   </body>
 </html>
