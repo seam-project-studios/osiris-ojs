@@ -25,7 +25,7 @@ for (let x=1; x<=10; x++) {
 <?
 for (let x=1; x<=10; x++) {
 ?>
-  <li><?=x ?> took <?=wait(rand()) ?></li>
+  <li><?=x ?> took <?=wait(rand()) ?> msecs</li>
 <?
 }
 ?>

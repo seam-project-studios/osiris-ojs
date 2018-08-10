@@ -856,7 +856,7 @@ Template.prototype = {
         this.mode = Template.modes.EVAL;
         break;
       case '<' + d + '=':
-        this.mode = Template.modes.ESCAPED;
+        this.mode = Template.modes.RAW;
         break;
       case '<' + d + '-':
         this.mode = Template.modes.RAW;

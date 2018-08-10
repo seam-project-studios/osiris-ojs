@@ -1,5 +1,6 @@
 <?
 let wasHeadersSent = express.headersSent;
+js('alert("Hi!");');
 ?>
 <?=snippet('header', {title: 'express examples'}) ?>
 <p>wasHeadersSent = <?=wasHeadersSent ?></p>
