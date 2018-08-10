@@ -25,3 +25,5 @@ locals.test = 'test123';
   <li>customFunc = <?=customFunc() ?></li>
 </ol>
 <p>end scope.ojs</p>
+
+<?=snippet('footer') ?>

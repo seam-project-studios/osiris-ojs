@@ -69,14 +69,24 @@ const Instance = function (writeStream) {
   // html snippets
   this.snippet = async (filename, args) => {
     // render a snippet
+    let previousArgs = this.args || {};
+    delete this.args;
+
     await render('./src/snippets/' + filename + '.ojs', { args });
+
+    this.args = previousArgs;
     return '';
   };
 
   // html elements
   this.element = async (filename, args) => {
     // render an element
+    let previousArgs = this.args || {};
+    delete this.args;
+
     await render('./src/elements/' + filename + '.ojs', { args });
+
+    this.args = previousArgs;
     return '';
   };
 

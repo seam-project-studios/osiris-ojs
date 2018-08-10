@@ -1,0 +1,9 @@
+<?=snippet('header', {title: 'elements examples'}) ?>
+
+<h2>Simple form elements</h2>
+<form method="post" action="?">
+  <?=element('input-text', {label: 'Label 1', name: 'input1name', id: 'input1id'}) ?><br/>
+  <?=element('input-text', {label: 'Label 2', name: 'input2name', id: 'input2id'}) ?><br/>
+</form>
+
+<?=snippet('footer') ?>
