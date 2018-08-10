@@ -54,6 +54,16 @@ const Instance = function (writeStream) {
 
   this.locals = {}; // for passing variables between templates
 
+  // html entity quote function
+  const qMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&#34;',
+    "'": '&#39;',
+  };
+  this.q = (str) => str.split('').map(c => qMap[c] || c).join('');
+
   // osiris component layer
 
   // html snippets

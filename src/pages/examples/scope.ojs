@@ -10,6 +10,7 @@ locals.test = 'test123';
   <li>tag print <?="string output 1" ?></li>
   <li>function printing <?=print("function test 1") ?></li>
   <li>js function resolving inline <?=(() => 'test')() ?></li>
+  <li title="<?=q('"Quoted text, html brackets < >"') ?>">escaping entities: "=<?=q('"') ?>, '=<?=q("'") ?></li>
 </ol>
 
 <p>snippet interjection</p>
