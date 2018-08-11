@@ -52,7 +52,7 @@ const main = async () => {
     async (file) => {
       // for each file in the templates folder
       const filename = file.substr(templateFolder.length);
-      const bar = new ProgressBar('[:bar] :filename - :task', { total: 3, width: 40 });
+      const bar = new ProgressBar('[:bar] :filename - :task', { total: ojsi18n.locales.length + 2, width: 40 });
 
       // extract file name information "name.ext"
       const doti = filename.lastIndexOf('.');
@@ -61,21 +61,20 @@ const main = async () => {
 
       bar.tick(1, {filename, task:'Preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
-
         // run the renderer, feeding the data into our files writeStream
-        bar.tick(1, {filename, task:'Rendering'});
         for (let locale of ojsi18n.locales) {
+          const buildFilename = buildFolder + name + '-' + locale; // no file extension
+          bar.tick(1, {filename, task:'Rendering ' + buildFilename});
           // a file for our template engine, open something for it to write to
-          let writeFile = fs.createWriteStream(buildFolder + name + '-' + locale); // no file extension
+          let writeFile = fs.createWriteStream(buildFilename);
 
           await osiris.render(writeFile, file, {
             i18n: ojsi18n.locale(locale),
           });
         }
-
       } else {
         // basic file copy from template to build
-        bar.tick(1, {filename, task:'Copying file'});
+        bar.tick(ojsi18n.locales.length, {filename, task:'Copying file'});
         await fs.copyFile(file, buildFolder + filename);
       }
       bar.tick(1, {filename, task:'Done'});
