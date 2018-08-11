@@ -16,16 +16,6 @@ const Osiris = function (writeStream) {
   // use memory buffered writeStream if none is provided
   if (!writeStream) writeStream = new streamBuffers.WritableStreamBuffer();
   this[s.writeStream] = writeStream;
-
-  this.render = async (filename) => {
-    delete this.render; // run once
-
-    let html = await this[s.render](filename);
-    this[s.writeStream].end(); // we're done
-
-    if (this[s.writeStream].getContents) return this[s.writeStream].getContents(); // patch for streamBuffers
-    return html;
-  };
 };
 
 // html entity quote function
@@ -38,6 +28,17 @@ const qMap = {
 };
 
 Osiris.prototype = {
+  render: async function (filename) {
+    delete this.render; // run once
+
+    // Object.freeze(this); // nothing new here from now on, no changes to top level members
+
+    let html = await this[s.render](filename);
+    this[s.writeStream].end(); // we're done
+
+    if (this[s.writeStream].getContents) return this[s.writeStream].getContents(); // patch for streamBuffers
+    return html;
+  },
   // our render function, ejs needs a filename, an object representing local scope and some options
   // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
   [s.render]: function (filename, args = {}) {
@@ -121,7 +122,6 @@ module.exports = {
     let osiris = new Osiris(writeStream);
 
     copyScopes(osiris, modules);
-    Object.freeze(this); // nothing new here from now on, no changes to top level members
 
     return osiris.render(filename);
   },
