@@ -36,8 +36,8 @@ const main = async () => {
 
     // call renderer with our addons, we can block here with await if we need any clean up after render
     await osiris.render(res, './src/pages/' + filename + '.ojs', {
-      express: ojsExpress(req, res), // this gives templates access to get, post, header() and headerSent
-      i18n: ojsi18n.locale('en-GB'), // localization
+      express: ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent
+      i18n: ojsi18n.locale('en-GB'), // localization via t(), d(), n()
       customFunc: () => 'customAnswer'
     });
     // render complete, res.end() sent, clean up

@@ -1,5 +1,5 @@
 <p>start other.ojs</p>
-
+<p>args = <?=q(JSON.stringify(args)) ?></p>
 <?
 // wait msec and resolve to msec
 const wait = (msec) => new Promise((res, rej) => {

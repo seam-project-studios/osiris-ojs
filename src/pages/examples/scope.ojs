@@ -12,16 +12,16 @@ locals.test = 'test123';
   <li>js function resolving inline <?=(() => '<strong>test</strong>')() ?></li>
   <li>quoted test <?=q('<strong>test</strong>') ?></li>
   <li title="<?=q('"Quoted text, html brackets < >"') ?>">escaping entities: "=<?=q('"') ?>, '=<?=q("'") ?></li>
+  <li>args = <?=q(JSON.stringify(args)) ?></li>
 </ol>
 
 <p>snippet interjection</p>
-<?=snippet('scope-snippet') ?>
+<?=snippet('scope-snippet', { some: 'args' }) ?>
 <p>snippet finished</p>
 
 <ol>
-  <li><?=print("function test 2") ?></li>
-  <li><?="string output 2" ?></li>
   <li>locals.test = <?=locals.test ?></li>
+  <li>args = <?=q(JSON.stringify(args)) ?></li>
   <li>customFunc = <?=customFunc() ?></li>
 </ol>
 <p>end scope.ojs</p>
