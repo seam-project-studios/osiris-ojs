@@ -1,4 +1,6 @@
 <?
+if (typeof express === 'undefined') return print('Express is missing!');
+
 let wasHeadersSent = express.headersSent;
 js('console.log("Hi!");');
 ?>

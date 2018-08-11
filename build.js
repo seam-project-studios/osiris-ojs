@@ -6,9 +6,6 @@ const templateFolder = './src/pages/';
 
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 
-const osiris = require('./instance'); // renderer
-const ojsi18n = require('./i18n');
-
 // fancy progress bars
 const ProgressBar = require('progress');
 
@@ -29,6 +26,14 @@ const recurseFs = async (root, file, beforeFolder, afterFolder) => {
 };
 
 const main = async () => {
+  const osiris = require('./osiris'); // renderer
+  const ojsi18n = await require('./i18n')();
+
+  osiris.use({
+    i18n: ojsi18n.locale('en-GB'),
+    customFunc: () => 'custom answer'
+  });
+
   try { // make if not exists
     await fs.mkdir(buildFolder);
   } catch (err) {
@@ -48,7 +53,7 @@ const main = async () => {
     async (file) => {
       // for each file in the templates folder
       const filename = file.substr(templateFolder.length);
-      const bar = new ProgressBar('[:bar] :filename - :task', { total: 4, width: 40 });
+      const bar = new ProgressBar('[:bar] :filename - :task', { total: 3, width: 40 });
 
       // extract file name information "name.ext"
       const doti = filename.lastIndexOf('.');
@@ -57,34 +62,16 @@ const main = async () => {
 
       bar.tick(1, {filename, task:'Preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
-        // setup localization
-        let i18n = await ojsi18n('en-GB');
-        // console.log(i18n.locales); // we can inspect the available locales here
-
-        let scopes = {
-          express: {
-            get: {},
-            post: {},
-            header: () => '',
-          },
-          i18n,
-          customFunc: () => 'custom answer',
-        };
-
         if ('streamy way') {
           // a file for our template engine, open something for it to write to
           let writeFile = fs.createWriteStream(buildFolder + name); // no file extension
 
-          // set up template scope
-          bar.tick(1, {filename, task:'Initiating renderer'});
-          const instance = osiris(writeFile);
-
           // run the renderer, feeding the data into our files writeStream
           bar.tick(1, {filename, task:'Rendering'});
-          await instance.render(file, scopes);
+          await osiris.render(writeFile, file);
         } else if ('returny way') {
           // set up template scope
-          bar.tick(2, {filename, task:'Rendering'});
+          bar.tick(1, {filename, task:'Rendering'});
           await fs.writeFile(
             buildFolder + name,
             await osiris().render(file, scopes)
@@ -93,7 +80,7 @@ const main = async () => {
 
       } else {
         // basic file copy from template to build
-        bar.tick(2, {filename, task:'Copying file'});
+        bar.tick(1, {filename, task:'Copying file'});
         await fs.copyFile(file, buildFolder + filename);
       }
       bar.tick(1, {filename, task:'Done'});
