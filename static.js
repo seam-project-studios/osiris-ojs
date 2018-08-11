@@ -1,6 +1,8 @@
 // host the static built files with express
 const HTTP_PORT = process.env.HTTP_PORT || 4682;
 
+const locale = 'en-GB';
+
 // build engine
 const build = require('./build');
 
@@ -19,6 +21,8 @@ const main = async () => {
     if (filename === '') {
       filename = 'index'; // default page for directory index
     }
+
+    filename += '-' + locale;
 
     if (!await fs.exists('./build/' + filename)) {
       return next(); // so close, doesn't exist

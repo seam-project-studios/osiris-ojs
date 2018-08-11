@@ -3,6 +3,15 @@ ejs.delimiter = '?'; // php style :D
 
 const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
 
+// html entity quote function, exposed for changes
+module.exports.qMap = {
+  '&': '&amp;',
+  '<': '&lt;',
+  '>': '&gt;',
+  '"': '&#34;',
+  "'": '&#39;',
+};
+
 // symbol map, for privatish object members
 const s = {
   writeStream: Symbol('writeStream'),
@@ -16,15 +25,6 @@ const Osiris = function (writeStream) {
   // use memory buffered writeStream if none is provided
   if (!writeStream) writeStream = new streamBuffers.WritableStreamBuffer();
   this[s.writeStream] = writeStream;
-};
-
-// html entity quote function
-const qMap = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&#34;',
-  "'": '&#39;',
 };
 
 Osiris.prototype = {
@@ -44,10 +44,10 @@ Osiris.prototype = {
   [s.render]: function (filename, args = {}) {
     return new Promise(async (resolve, reject) => {
       // copy any args we had and nuke the scope for the next template
-      let previousArgs = this.args;
+      const previousArgs = this.args;
       this.args = args;
 
-      await ejs.renderFile(filename, this, { filename, context: {} }, async (err, p) => {
+      ejs.renderFile(filename, this, { filename, context: {} }, async (err, p) => {
         // p is a promise/writeableStream from ejs layer
         if (err) return reject(err);
 
@@ -57,10 +57,9 @@ Osiris.prototype = {
         }
         p.outputStream.pipe(this[s.writeStream], {end: false}); // pipe our output, don't close the stream when finished (we might just be an include in a template)
 
-        resolve(p); // we've resolved, but the actual resolver isn't called until p has resolved (the template has finished rendering)
-
         await p; // once everything is done, copy our args back into scope
         this.args = previousArgs;
+        resolve(p); // we've resolved
       });
     });
   },
@@ -69,7 +68,7 @@ Osiris.prototype = {
   print: function (text) {
     return new Promise((res, rej) => this[s.writeStream].write(text, () => res('')));
   },
-  q: (str='') => str.split('').map(c => qMap[c] || c).join(''),
+  q: (str='') => str.split('').map(c => module.exports.qMap[c] || c).join(''),
 
   locals: {}, // global scope for templates
 
@@ -114,15 +113,12 @@ const copyScopes = (obj, scopes) => {
   }
 };
 
-module.exports = {
-  use: (...modules) => {
-    copyScopes(Osiris.prototype, modules);
-  },
-  render: (writeStream, filename, ...modules) => {
-    let osiris = new Osiris(writeStream);
+module.exports.use = (...modules) => {
+  copyScopes(Osiris.prototype, modules);
+};
 
-    copyScopes(osiris, modules);
-
-    return osiris.render(filename);
-  },
+module.exports.render = (writeStream, filename, ...modules) => {
+  let osiris = new Osiris(writeStream);
+  copyScopes(osiris, modules);
+  return osiris.render(filename);
 };

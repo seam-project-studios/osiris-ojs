@@ -30,7 +30,6 @@ const main = async () => {
   const ojsi18n = await require('./i18n')();
 
   osiris.use({
-    i18n: ojsi18n.locale('en-GB'),
     customFunc: () => 'custom answer'
   });
 
@@ -62,20 +61,16 @@ const main = async () => {
 
       bar.tick(1, {filename, task:'Preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
-        if ('streamy way') {
-          // a file for our template engine, open something for it to write to
-          let writeFile = fs.createWriteStream(buildFolder + name); // no file extension
 
-          // run the renderer, feeding the data into our files writeStream
-          bar.tick(1, {filename, task:'Rendering'});
-          await osiris.render(writeFile, file);
-        } else if ('returny way') {
-          // set up template scope
-          bar.tick(1, {filename, task:'Rendering'});
-          await fs.writeFile(
-            buildFolder + name,
-            await osiris().render(file, scopes)
-          );
+        // run the renderer, feeding the data into our files writeStream
+        bar.tick(1, {filename, task:'Rendering'});
+        for (let locale of ojsi18n.locales) {
+          // a file for our template engine, open something for it to write to
+          let writeFile = fs.createWriteStream(buildFolder + name + '-' + locale); // no file extension
+
+          await osiris.render(writeFile, file, {
+            i18n: ojsi18n.locale(locale),
+          });
         }
 
       } else {
