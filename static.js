@@ -15,14 +15,14 @@ const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const main = async () => {
   await build();
 
-  app.use('/', async (req, res, next) => { // anything not served lands here
+  app.use(async (req, res, next) => { // anything not served lands here
     let filename = req.path.substr(1); // trim starting /
 
     if (filename === '') {
       filename = 'index'; // default page for directory index
     }
 
-    filename += '-' + locale;
+    filename += '-' + locale; // add our locale, as per ./build
 
     if (!await fs.exists('./build/' + filename)) {
       return next(); // so close, doesn't exist

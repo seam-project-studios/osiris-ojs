@@ -47,11 +47,14 @@ const main = async () => {
     (folder) => fs.rmdir(folder) // post folder
   );
 
+  console.log(ojsi18n.locales.length + ' locales detected:' + ojsi18n.locales.join(', '));
+
   // run build
   await recurseFs(templateFolder,
     async (file) => {
       // for each file in the templates folder
       const filename = file.substr(templateFolder.length);
+
       const bar = new ProgressBar('[:bar] :filename - :task', { total: ojsi18n.locales.length + 2, width: 40 });
 
       // extract file name information "name.ext"
@@ -59,12 +62,14 @@ const main = async () => {
       const ext = filename.substr(doti+1);
       const name = filename.substr(0,doti);
 
-      bar.tick(1, {filename, task:'Preparing to write'});
+      bar.tick(1, {filename, task:'preparing to write'});
       if (ext.toLowerCase() === 'ojs') {
         // run the renderer, feeding the data into our files writeStream
+
         for (let locale of ojsi18n.locales) {
           const buildFilename = buildFolder + name + '-' + locale; // no file extension
-          bar.tick(1, {filename, task:'Rendering ' + buildFilename});
+          bar.tick(1, {filename, task:'building ' + buildFilename});
+
           // a file for our template engine, open something for it to write to
           let writeFile = fs.createWriteStream(buildFilename);
 
@@ -72,21 +77,21 @@ const main = async () => {
             i18n: ojsi18n.locale(locale),
           });
         }
+        bar.tick(1, {filename, task:'built: ' + ojsi18n.locales.join(', ')});
       } else {
         // basic file copy from template to build
-        bar.tick(ojsi18n.locales.length, {filename, task:'Copying file'});
+        bar.tick(ojsi18n.locales.length, {filename, task:'copying file'});
         await fs.copyFile(file, buildFolder + filename);
+        bar.tick(1, {filename, task:'copied'});
       }
-      bar.tick(1, {filename, task:'Done'});
-
     }, async (folder) => {
       // 'before' the folder is iterated for files, mkdir a copy in build
       const foldername = folder.substr(templateFolder.length);
 
       const bar = new ProgressBar('[:bar] :foldername - :task', { total: 2, width: 40 });
-      bar.tick(1, {foldername, task:'Creating folder'});
+      bar.tick(1, {foldername, task:'creating folder'});
       await fs.mkdir(buildFolder + foldername);
-      bar.tick(1, {foldername, task:'Done'});
+      bar.tick(1, {foldername, task:'created'});
     }
   );
 };
