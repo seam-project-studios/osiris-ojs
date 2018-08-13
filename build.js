@@ -71,8 +71,8 @@ const main = async () => {
         let buildname = name;
         let buildext = '';
         if (builddoti !== -1) {
-          const buildext = name.substr(doti+1);
-          const buildname = name.substr(0,doti);
+          buildname = name.substr(0,builddoti);
+          buildext = name.substr(builddoti+1);
         }
 
         for (let locale of ojsi18n.locales) {
