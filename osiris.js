@@ -23,15 +23,13 @@ const s = {
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Osiris = function (writeStream) {
   // use memory buffered writeStream if none is provided
-  if (!writeStream) writeStream = new streamBuffers.WritableStreamBuffer();
-  this[s.writeStream] = writeStream;
+  this[s.writeStream] = writeStream || new streamBuffers.WritableStreamBuffer();
 };
 
 Osiris.prototype = {
+  // call this to render a file
   render: async function (filename) {
     delete this.render; // run once
-
-    // Object.freeze(this); // nothing new here from now on, no changes to top level members
 
     let html = await this[s.render](filename);
     this[s.writeStream].end(); // we're done
@@ -39,6 +37,7 @@ Osiris.prototype = {
     if (this[s.writeStream].getContents) return this[s.writeStream].getContents(); // patch for streamBuffers
     return html;
   },
+
   // our render function, ejs needs a filename, an object representing local scope and some options
   // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
   [s.render]: function (filename, args = {}) {
