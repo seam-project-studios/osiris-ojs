@@ -66,8 +66,17 @@ const main = async () => {
       if (ext.toLowerCase() === 'ojs') {
         // run the renderer, feeding the data into our files writeStream
 
+        // extract file name information "name.ext"
+        const builddoti = name.lastIndexOf('.');
+        let buildname = name;
+        let buildext = '';
+        if (builddoti !== -1) {
+          const buildext = name.substr(doti+1);
+          const buildname = name.substr(0,doti);
+        }
+
         for (let locale of ojsi18n.locales) {
-          const buildFilename = buildFolder + name + '-' + locale; // no file extension
+          const buildFilename = buildFolder + buildname + '-' + locale + (buildext ? '.' + buildext : ''); // no file extension
           bar.tick(1, {filename, task:'building ' + buildFilename});
 
           // a file for our template engine, open something for it to write to
