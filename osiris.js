@@ -1,3 +1,5 @@
+const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
+
 const ejs = require('./ejs-promise/ejs'); // temporary "proves the concept" library
 ejs.delimiter = '?'; // php style :D
 
@@ -75,13 +77,13 @@ Osiris.prototype = {
 
   // render a snippet of html
   snippet: async function (filename, args) {
-    await this[s.render]('./src/snippets/' + filename + '.ojs', args);
+    await this[s.render](srcFolder + 'snippets/' + filename + '.ojs', args);
     return '';
   },
 
   // html elements
   element: async function (filename, args) {
-    await this[s.render]('./src/elements/' + filename + '.ojs', args);
+    await this[s.render](srcFolder + 'elements/' + filename + '.ojs', args);
     return '';
   },
 

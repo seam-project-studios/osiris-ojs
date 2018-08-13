@@ -1,5 +1,5 @@
 // params
-const localesFolder = './src/locales/';
+const localesFolder = process.cwd() + '/src/locales/';
 
 // general purpose
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
