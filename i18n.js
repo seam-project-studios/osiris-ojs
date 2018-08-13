@@ -5,6 +5,10 @@ const localesFolder = process.cwd() + '/src/locales/';
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const asyncRequire = require('async-require');
 
+// by default asyncRequire looks relative to this folder, not cwd, so we need to change that
+const path = require('path');
+asyncRequire.load = (file) => fs.readFile(path.resolve(process.cwd(), file + '.js'));
+
 // recurse down a file system tree running a callback for each file
 const recurseFiles = async (root, file) => {
   let d = await fs.readdir(root);

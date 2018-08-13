@@ -12,6 +12,10 @@ const main = async () => {
   const bodyParser = require('body-parser');
   app.use(bodyParser.urlencoded({ extended: false }));
 
+  // parse cookies into req.cookies
+  const cookieParser = require('cookie-parser')
+  app.use(cookieParser());
+
   // our render engine
   const osiris = require('./osiris');
 
@@ -21,6 +25,26 @@ const main = async () => {
 
   app.use(express.static('src/pages/')); // serve pages folder
 
+  // expose a global link function for 118n support
+  osiris.use({
+    link: (path) => path, // this is more for linking between built pages than express
+    // we'll use a simple query string to change locale, this may not work if you keep state (like IDs) in the query string
+    linkLocale: (locale) => '?locale=' + locale,
+  });
+
+  // middleware to handle i18n link, linkLocale, assign req.locale
+  const url = require('url');
+  app.use((req, res, next) => {
+    const getVars = url.parse(req.url, true).query;
+    if (typeof getVars.locale !== 'undefined') {
+      res.cookie('locale', getVars.locale);
+      req.locale = getVars.locale
+    } else {
+      req.locale = req.cookies.locale || 'en-GB'; // cookie/default locale
+    }
+    next();
+  });
+
   app.use(async (req, res, next) => { // anything not served lands here
     let filename = req.path.substr(1); // trim starting /
 
@@ -29,7 +53,7 @@ const main = async () => {
     }
 
     if (!await fs.exists('./src/pages/' + filename + '.ojs')) {
-      return next(); // so close, doesn't exist
+      return next(); // file doesn't exist, bail
     }
 
     res.header('content-type', 'text/html'); // we have something
@@ -37,7 +61,7 @@ const main = async () => {
     // call renderer with our addons, we can block here with await if we need any clean up after render
     await osiris.render(res, './src/pages/' + filename + '.ojs', {
       express: ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent
-      i18n: ojsi18n.locale('en-GB'), // localization, assume en-GB for now; exposed: t(), d(), n(), locales, setLocale()
+      i18n: ojsi18n.locale(req.locale), // localization, assume en-GB for now; exposed: t(), d(), n(), locales, setLocale()
       customFunc: () => 'customAnswer' // anything else we could possibly want, async/promises supported
     });
     // render complete, res.end() sent, clean up

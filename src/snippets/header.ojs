@@ -4,6 +4,23 @@
     <title><?=args.title || 'Title here' ?></title>
   </head>
   <body>
-    <a href="/">Osiris</a>
+    <a href="<?=link('/') ?>">Osiris</a>
+    <div style="float: right;">
+<?
+if (i18n) {
+  for (let locale of i18n.locales) {
+    if (i18n.locale == locale) {
+?>
+    [<strong><?=locale ?></strong>]
+<?
+    } else {
+?>
+    [<a href="<?=linkLocale(locale) ?>"><?=locale ?></a>]
+<?
+    }
+  }
+}
+?>
+    </div>
     <hr />
     <h1><?=args.title || 'Title here' ?></h1>

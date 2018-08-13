@@ -1,6 +1,7 @@
 <?=snippet('header', {title: 'i18n examples'}) ?>
 
 <p>Available locales: <?=i18n.locales.join(',') ?></p>
+<p>Current locale: <?=i18n.locale ?></p>
 
 <h2>Text tests</h2>
 <p><?=i18n.t('test.welcome') ?></p>

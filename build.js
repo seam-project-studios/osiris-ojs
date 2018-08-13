@@ -49,6 +49,18 @@ const main = async () => {
 
   console.log(ojsi18n.locales.length + ' locales detected:' + ojsi18n.locales.join(', '));
 
+  // break up the file name to insert the locale
+  const makePath = (path, locale) => {
+    const doti = path.lastIndexOf('.');
+    let name = path;
+    let ext = '';
+    if (doti !== -1) {
+      name = path.substr(0,doti);
+      ext = path.substr(doti+1);
+    }
+    return name + '-' + locale + (ext ? '.' + ext : '');
+  };
+
   // run build
   await recurseFs(templateFolder,
     async (file) => {
@@ -66,17 +78,8 @@ const main = async () => {
       if (ext.toLowerCase() === 'ojs') {
         // run the renderer, feeding the data into our files writeStream
 
-        // extract file name information "name.ext"
-        const builddoti = name.lastIndexOf('.');
-        let buildname = name;
-        let buildext = '';
-        if (builddoti !== -1) {
-          buildname = name.substr(0,builddoti);
-          buildext = name.substr(builddoti+1);
-        }
-
         for (let locale of ojsi18n.locales) {
-          const buildFilename = buildFolder + buildname + '-' + locale + (buildext ? '.' + buildext : ''); // no file extension
+          const buildFilename = buildFolder + makePath(name, locale);
           bar.tick(1, {filename, task:'building ' + buildFilename});
 
           // a file for our template engine, open something for it to write to
@@ -84,6 +87,9 @@ const main = async () => {
 
           await osiris.render(writeFile, file, {
             i18n: ojsi18n.locale(locale),
+            // expose a global link function for 118n support
+            link: (path) => makePath(path == '/' ? '/index' : path, locale), // link to same locale
+            linkLocale: (newLocale) => '/' + makePath(name, newLocale), // link to different locale
           });
         }
         bar.tick(1, {filename, task:'built: ' + ojsi18n.locales.join(', ')});

@@ -22,7 +22,9 @@ const main = async () => {
       filename = 'index'; // default page for directory index
     }
 
-    filename += '-' + locale; // add our locale, as per ./build
+    if (!await fs.exists('./build/' + filename)) {
+      filename += '-' + locale; // add our locale, as per ./build
+    }
 
     if (!await fs.exists('./build/' + filename)) {
       return next(); // so close, doesn't exist

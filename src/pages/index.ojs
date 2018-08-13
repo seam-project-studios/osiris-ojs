@@ -2,10 +2,10 @@
 
 <h2>Example code</h2>
 <ul>
-  <li><a href="/examples/scope">scope</a></li>
-  <li><a href="/examples/elements">elements</a></li>
-  <li><a href="/examples/i18n">i18n</a></li>
-  <li><a href="/examples/express">express</a></li>
+  <li><a href="<?=link('/examples/scope') ?>">scope</a></li>
+  <li><a href="<?=link('/examples/elements') ?>">elements</a></li>
+  <li><a href="<?=link('/examples/i18n') ?>">i18n</a></li>
+  <li><a href="<?=link('/examples/express') ?>">express</a></li>
 </ul>
 
 <?=snippet('footer') ?>

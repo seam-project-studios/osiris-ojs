@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "async-require": "^1.2.2",
+    "cookie-parser": "^1.4.3",
     "mz": "^2.7.0",
     "progress": "^2.0.0",
     "stream-buffers": "^3.0.2"

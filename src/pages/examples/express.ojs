@@ -7,6 +7,7 @@ js('console.log("Hi!");');
 <?=snippet('header', {title: 'express examples'}) ?>
 <p>wasHeadersSent = <?=wasHeadersSent ?></p>
 <p>express.headersSent = <?=express.headersSent ?></p>
+<p>express.cookie = <?=q(JSON.stringify(express.cookie)) ?></p>
 
 <p>
   <a href='?test=query&string=here'>express.get</a>
