@@ -69,7 +69,10 @@ Osiris.prototype = {
   print: function (text) {
     return new Promise((res, rej) => this[s.writeStream].write(text, () => res('')));
   },
-  q: (str='') => str.split('').map(c => module.exports.qMap[c] || c).join(''),
+  q: async (str='') => {
+    await str;
+    return str.split('').map(c => module.exports.qMap[c] || c).join('');
+  },
 
   locals: {}, // global scope for templates
 

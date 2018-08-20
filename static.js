@@ -23,7 +23,8 @@ const main = async () => {
     }
 
     if (!await fs.exists('./build/' + filename)) {
-      filename += '-' + locale; // add our locale, as per ./build
+      // we didn't find the file, try stuffing the default locale in and trying again
+      filename += '-' + locale;
     }
 
     if (!await fs.exists('./build/' + filename)) {
