@@ -70,7 +70,7 @@ Osiris.prototype = {
     return new Promise((res, rej) => this[s.writeStream].write(text, () => res('')));
   },
   q: async (str='') => {
-    str = await str;
+    str = await str; // we may be given a promise of a string
     return str.split('').map(c => module.exports.qMap[c] || c).join('');
   },
 

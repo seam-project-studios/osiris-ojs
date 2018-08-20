@@ -67,7 +67,7 @@ const textLocales = new Promise(async (res, rej) => {
 const traverseObj = async (obj, path) => {
   let ref = obj;
   for (let p of path) {
-    if (!ref[p]) return false;
+    if (typeof ref[p] === 'undefined') return false;
     if (typeof ref[p] === 'function') {
       ref = await ref[p]();
     } else {
