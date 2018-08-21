@@ -38,8 +38,14 @@ Osiris.prototype = {
   render: async function (filename) {
     delete this.render; // run once
 
-    let html = await this[s.render](filename);
-    this[s.writeStream].end(); // we're done
+    let html;
+    try {
+      html = await this[s.render](filename);
+    } catch (e) {
+      this.print('A compilation error occured: ' + await this.q(e.message));
+    } finally {
+      this[s.writeStream].end(); // we're done
+    }
 
     if (this[s.writeStream].getContents) return this[s.writeStream].getContents(); // patch for streamBuffers
     return html;
@@ -53,7 +59,7 @@ Osiris.prototype = {
       const previousArgs = this.args;
       this.args = args;
 
-      ejs.renderFile(filename, this, { filename, context: {} }, async (err, p) => {
+      ejs.renderFile(filename, this, { filename, context: {}, compileDebug: true }, async (err, p) => {
         // p is a promise/writeableStream from ejs layer
         if (err) return reject(err);
 
@@ -61,7 +67,14 @@ Osiris.prototype = {
           p.noBuffer(); // don't hold data in buffers
           p.waitFlush(); // wait for our writeStream to flush before asking for more data from template engine
         }
-        p.outputStream.pipe(this[s.writeStream], {end: false}); // pipe our output, don't close the stream when finished (we might just be an include in a template)
+
+        // pipe our output, don't close the stream when finished (we might just be an include in a template)
+        p.outputStream.pipe(this[s.writeStream], {end: false});
+        p.outputStream.on('error', async (e) => {
+          await this.print('<pre>' + await this.q(e.message) + '</pre>');
+          p.defered.interrupt();
+          this[s.writeStream].end();
+        });
 
         await p; // once everything is done, copy our args back into scope
         this.args = previousArgs;
