@@ -26,6 +26,11 @@ const s = {
 const Osiris = function (writeStream) {
   // use memory buffered writeStream if none is provided
   this[s.writeStream] = writeStream || new streamBuffers.WritableStreamBuffer();
+
+  // set up variables in "this" scope
+  this.locals = {}; // global scope for templates
+  this[s.jsBundle] = [];
+  this[s.cssBundle] = [];
 };
 
 Osiris.prototype = {
@@ -74,8 +79,6 @@ Osiris.prototype = {
     return str.split('').map(c => module.exports.qMap[c] || c).join('');
   },
 
-  locals: {}, // global scope for templates
-
   // osiris component layer
 
   // render a snippet of html
@@ -91,7 +94,6 @@ Osiris.prototype = {
   },
 
   // collection points for js and css
-  [s.jsBundle]: [],
   js: function (str) {
     this[s.jsBundle].push(str);
     return '';
@@ -100,7 +102,6 @@ Osiris.prototype = {
     return this[s.jsBundle].join("\n");
   },
 
-  [s.cssBundle]: [],
   css: function (str) {
     this[s.cssBundle].push(str);
     return '';
