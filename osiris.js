@@ -1,7 +1,7 @@
 const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
 
-const ejs = require('./ejs-promise/ejs'); // temporary "proves the concept" library
-ejs.delimiter = '?'; // php style :D
+const ejs = require('./ejs-promise/ojs'); // temporary "proves the concept" library
+// ejs.delimiter = '?'; // php style :D
 
 const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
 
@@ -53,39 +53,25 @@ Osiris.prototype = {
 
   // our render function, ejs needs a filename, an object representing local scope and some options
   // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
-  [s.render]: function (filename, args = {}) {
-    return new Promise(async (resolve, reject) => {
-      // copy any args we had and nuke the scope for the next template
-      const previousArgs = this.args;
-      this.args = args;
-
-      ejs.renderFile(filename, this, { filename, context: {}, compileDebug: true }, async (err, p) => {
-        // p is a promise/writeableStream from ejs layer
-        if (err) return reject(err);
-
-        if (!this[s.writeStream].getContents) { // patch for streamBuffers, buffer and flush
-          p.noBuffer(); // don't hold data in buffers
-          p.waitFlush(); // wait for our writeStream to flush before asking for more data from template engine
-        }
-
-        // pipe our output, don't close the stream when finished (we might just be an include in a template)
-        p.outputStream.pipe(this[s.writeStream], {end: false});
-        p.outputStream.on('error', async (e) => {
-          await this.print('<pre>' + await this.q(e.message) + '</pre>');
-          p.defered.interrupt();
-          this[s.writeStream].end();
-        });
-
-        await p; // once everything is done, copy our args back into scope
-        this.args = previousArgs;
-        resolve(p); // we've resolved
-      });
-    });
+  [s.render]: async function (filename, args = {}) {
+    // copy any args we had and nuke the scope for the next template
+    const previousArgs = this.args;
+    this.args = args;
+    await ejs.renderFile(filename, this, { });
+    this.args = previousArgs;
+    return '';
   },
 
   // write directly to stream, return empty string
   print: function (text) {
-    return new Promise((res, rej) => this[s.writeStream].write(text, () => res('')));
+
+    return new Promise(async (res, rej) => {
+      text = await text;
+      text = text.toString();
+      if (text.length === 0) return res('');
+      console.log('print:' + JSON.stringify(text));
+      this[s.writeStream].write(text, () => res(''));
+    });
   },
   q: async (str='') => {
     str = await str; // we may be given a promise of a string
