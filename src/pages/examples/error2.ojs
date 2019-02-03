@@ -1,0 +1,3 @@
+<?=snippet('header', {title: 'template error examples'}) ?>
+<?= ag dfg dfsgdfsgfdg ?>
+<?=snippet('footer') ?>

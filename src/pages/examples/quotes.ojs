@@ -1,0 +1,13 @@
+<?=snippet('header', {title: 'template error examples'}) ?>
+<p>Single quotes <?=q('<?="hah!" ?>') ?></p>
+<p>Double quotes <?=q("<?='hah!' ?>") ?></p>
+<p>Backticks <?=q("<?=`hah!` ?>") ?></p>
+<p>Singleline comment <?
+//<?='multiline' ?>
+?></p>
+<p>Multiline comment <?
+/*
+<?='multiline' ?>
+*/
+?></p>
+<?=snippet('footer') ?>

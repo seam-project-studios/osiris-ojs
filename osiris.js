@@ -20,6 +20,7 @@ const s = {
   render: Symbol('render'),
   jsBundle: Symbol('jsBundle'),
   cssBundle: Symbol('cssBundle'),
+  haltOjs: Symbol('haltOjs')
 };
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
@@ -40,7 +41,7 @@ Osiris.prototype = {
 
     let html;
     try {
-      html = await this[s.render](filename);
+      html = await this[s.render](filename, {});
     } catch (e) {
       this.print('A compilation error occured: ' + await this.q(e.message));
     } finally {
@@ -57,25 +58,23 @@ Osiris.prototype = {
     // copy any args we had and nuke the scope for the next template
     const previousArgs = this.args;
     this.args = args;
-    await ejs.renderFile(filename, this, { });
+    await ejs.renderFile(this[s.writeStream], filename, this, {});
     this.args = previousArgs;
     return '';
   },
 
-  // write directly to stream, return empty string
-  print: function (text) {
-
-    return new Promise(async (res, rej) => {
-      text = await text;
-      text = text.toString();
-      if (text.length === 0) return res('');
-      console.log('print:' + JSON.stringify(text));
-      this[s.writeStream].write(text, () => res(''));
-    });
+  onClose: function () {
+    console.log('User closed stream!');
   },
-  q: async (str='') => {
-    str = await str; // we may be given a promise of a string
-    return str.split('').map(c => module.exports.qMap[c] || c).join('');
+
+  q: (str='') => {
+    const doQ = (str) => str.split('').map(c => module.exports.qMap[c] || c).join('');
+
+    if (str instanceof Promise) return new Promise(async (res, rej) => {
+      res(doQ(await str));
+    });
+
+    return doQ(str);
   },
 
   // osiris component layer
