@@ -16,10 +16,11 @@
     "cookie-parser": "^1.4.3",
     "mz": "^2.7.0",
     "progress": "^2.0.0",
-    "stream-buffers": "^3.0.2"
+    "stream-buffers": "^3.0.2",
+    "syntax-error": "^1.4.0"
   },
   "engines": {
-    "node": ">=9.2",
+    "node": ">=10.15.1",
     "npm": ">=5.6.0"
   },
   "devDependencies": {

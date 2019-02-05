@@ -1,7 +1,6 @@
 const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
 
-const ejs = require('./ejs-promise/ejs'); // temporary "proves the concept" library
-ejs.delimiter = '?'; // php style :D
+const ejs = require('.//ojs');
 
 const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
 
@@ -20,6 +19,7 @@ const s = {
   render: Symbol('render'),
   jsBundle: Symbol('jsBundle'),
   cssBundle: Symbol('cssBundle'),
+  haltOjs: Symbol('haltOjs')
 };
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
@@ -40,7 +40,7 @@ Osiris.prototype = {
 
     let html;
     try {
-      html = await this[s.render](filename);
+      html = await this[s.render](filename, {});
     } catch (e) {
       this.print('A compilation error occured: ' + await this.q(e.message));
     } finally {
@@ -53,43 +53,27 @@ Osiris.prototype = {
 
   // our render function, ejs needs a filename, an object representing local scope and some options
   // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
-  [s.render]: function (filename, args = {}) {
-    return new Promise(async (resolve, reject) => {
-      // copy any args we had and nuke the scope for the next template
-      const previousArgs = this.args;
-      this.args = args;
+  [s.render]: async function (filename, args = {}) {
+    // copy any args we had and nuke the scope for the next template
+    const previousArgs = this.args;
+    this.args = args;
+    await ejs.renderFile(this[s.writeStream], filename, this, {});
+    this.args = previousArgs;
+    return '';
+  },
 
-      ejs.renderFile(filename, this, { filename, context: {}, compileDebug: true }, async (err, p) => {
-        // p is a promise/writeableStream from ejs layer
-        if (err) return reject(err);
+  onClose: function () {
+    console.log('User closed stream!');
+  },
 
-        if (!this[s.writeStream].getContents) { // patch for streamBuffers, buffer and flush
-          p.noBuffer(); // don't hold data in buffers
-          p.waitFlush(); // wait for our writeStream to flush before asking for more data from template engine
-        }
+  q: (str='') => {
+    const doQ = (str) => str.split('').map(c => module.exports.qMap[c] || c).join('');
 
-        // pipe our output, don't close the stream when finished (we might just be an include in a template)
-        p.outputStream.pipe(this[s.writeStream], {end: false});
-        p.outputStream.on('error', async (e) => {
-          await this.print('<pre>' + await this.q(e.message) + '</pre>');
-          p.defered.interrupt();
-          this[s.writeStream].end();
-        });
-
-        await p; // once everything is done, copy our args back into scope
-        this.args = previousArgs;
-        resolve(p); // we've resolved
-      });
+    if (str instanceof Promise) return new Promise(async (res, rej) => {
+      res(doQ(await str));
     });
-  },
 
-  // write directly to stream, return empty string
-  print: function (text) {
-    return new Promise((res, rej) => this[s.writeStream].write(text, () => res('')));
-  },
-  q: async (str='') => {
-    str = await str; // we may be given a promise of a string
-    return str.split('').map(c => module.exports.qMap[c] || c).join('');
+    return doQ(str);
   },
 
   // osiris component layer

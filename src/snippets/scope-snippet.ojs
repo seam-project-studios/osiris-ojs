@@ -14,8 +14,8 @@ const rand = () => Math.round(Math.random()*10);
 <ol>
 <?
 for (let x=1; x<=10; x++) {
-  let y = yield wait(rand()); // yield replaces async
-  yield print('<li>'+ x +' took ' + y + ' msec</li>');
+  let y = await wait(rand());
+  await print('<li>'+ x +' took ' + y + ' msec</li>');
 }
 ?>
 </ol>
@@ -37,7 +37,7 @@ for (let x=1; x<=10; x++) {
 for (let x=1; x<=10; x++) {
   wait(rand()).then(y => print('<li>'+ x +' took ' + y + ' msec</li>'));
 }
-yield wait(10); // to make sure it finished
+await wait(10); // to make sure it finished
 ?>
 </ol>
 

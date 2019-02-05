@@ -1,0 +1,12 @@
+<?=snippet('header', {title: 'template error examples'}) ?>
+<p>Error testing</p>
+<?="test" ?> test <? await print("test") ?>
+<?
+/* comment
+here */
+// test
+?>
+<?
+throw 'arse';
+?>
+<?=snippet('footer') ?>
