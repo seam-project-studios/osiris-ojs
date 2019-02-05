@@ -12,12 +12,13 @@ const ojsTemplate = function (filename, opts) {
 
 ojsTemplate.prototype = {
   compile: async function () {
-    let text = (await fs.readFile(this.filename)).toString().replace(/^\uFEFF/, '').replace(/\r/g, '').replace(/^\s+|\s+$/gm, '')
+    let text = (await fs.readFile(this.filename)).toString();
+    text = text.replace(/^\uFEFF/, '').replace(/\r/g, '');
     let lines = text.split('\n');
 
     this.rethrow = (err, lineno) => {
-      let start = Math.max(lineno - 3, 0);
-      let end = Math.min(lines.length, lineno + 3);
+      let start = Math.max(lineno - 5, 0);
+      let end = Math.min(lines.length, lineno + 5);
 
       // Error context
       let code = lines.slice(start, end).map((line, i) => {
@@ -28,111 +29,124 @@ ojsTemplate.prototype = {
       // Alter exception message
       if (typeof err === 'string') err = new Error(err);
       err.path = this.filename;
-      err.message = '<pre>' + (this.filename + ':' + lineno + '\n' + code + '\n\nMessage: ' + err.message).replace(/</g, '&lt;') + '</pre>';
+      err.message = (this.filename + ':' + lineno + '\n' + code + '\n\nMessage: ' + err.message);
 
       throw err;
     }
 
     let cur = 0; // current character through file
+    let line = 1; // current line through file
     let start = 0; // start character of current chunk
-    let state = 'html'; // html, js, scomment, mcomment, squote, dquote, backtick
+    let state = 'html'; // html, js, scomment, mcomment, squote, dquote
+    let source = [];
+
+    // sniff the string from cur for the next chars matching string
+    const expect = (string, moveCur = true) => {
+      const len = string.length;
+      if (text.substring(cur, cur + len) === string) {
+        if (moveCur) cur += len;
+        return true;
+      } else {
+        return false;
+      }
+    }
+    const appendAndSkip = (skip = 0) => {
+      if (start !== cur) {
+        let code = text.substring(start, cur);
+        if (state === 'js') {
+          if (code[0] === '=') {
+            source.push('await print(' + code.substr(1).replace(/;$/, '') + ');');
+          } else {
+            source.push(code);
+          }
+        } else if (state === 'html') {
+          source.push('await print(' + JSON.stringify(code) + ');');
+        } else {
+          throw 'Tried to append in wrong state: ' + state;
+        }
+      }
+      cur += skip;
+      start = cur;
+    };
+    const nl = () => {
+      line++;
+      source.push('\n__line++;');
+    };
+
     while (cur < text.length) {
-      if (text[cur] == '\n') this.source += ';__line++;\n'; // increment line counter
       switch (state) {
         case 'html':
-          if (text[cur] === '<' && text[cur+1] === '?') {
-            if (start !== cur) this.source += 'await print(' + JSON.stringify(text.substring(start, cur)) + ');';
+          if (expect('\n')) {
+            appendAndSkip();
+            nl();
+          } else if (expect('<?', false)) {
+            appendAndSkip(2);
             state = 'js';
-            cur += 2;
-            start = cur;
           } else {
             cur++;
           }
         break;
         case 'js':
-          if (text[cur] === '\\') {
-            cur += 2; // escaped char, move forward
-          } else if (text[cur] === "'") {
+          if (expect('\n', false)) {
+            appendAndSkip(1);
+            nl();
+          } else if (expect('\\')) {
+            cur++; // skip escaped char
+          } else if (expect("'")) {
             state = 'squote';
-            cur++;
-          } else if (text[cur] === '"') {
+          } else if (expect('"')) {
             state = 'dquote';
-            cur++;
-          } else if (text[cur] === '`') {
-            state = 'backtick';
-            cur++;
-          } else if (text[cur] === '/' && text[cur+1] === '*') {
+          } else if (expect('`')) {
+            this.rethrow('Backticks are forbidden in templates', line);
+          } else if (expect('/*', false)) {
+            appendAndSkip(2);
             state = 'mcomment';
-            cur+=2;
-          } else if (text[cur] === '/' && text[cur+1] === '/') {
+          } else if (expect('//')) {
             state = 'scomment';
-            if (start !== cur) {
-              if (text[start] === '=') {
-                this.source += 'await print(' + text.substring(start+1, cur-1) + ');';
-              } else {
-                this.source += text.substring(start, cur) + ';';
-              }
-            }
-            cur += 2;
-          } else if (text[cur] === '?' && text[cur+1] === '>') {
+          } else if (expect('?>', false)) {
+            appendAndSkip(2);
             state = 'html';
-            if (start !== cur) {
-              if (text[start] === '=') {
-                this.source += 'await print(' + text.substring(start+1, cur-1) + ');';
-              } else {
-                this.source += text.substring(start, cur) + ';';
-              }
+            if (expect('\n')) {
+              nl();
+              start = cur;
             }
-            cur += 2;
-            if (text[cur+1] === '\n') cur++;
-            start = cur;
           } else {
             cur++;
           }
         break;
         case 'squote':
-          if (text[cur] === '\\') {
-            cur += 2; // escaped char, move forward
-          } else if (text[cur] === "'") {
+          if (expect('\\')) {
+            cur++; // escaped char, move forward
+          } else if (expect("'")) {
             state = 'js';
-            cur++;
           } else {
             cur++;
           }
         break;
         case 'dquote':
-          if (text[cur] === '\\') {
-            cur += 2; // escaped char, move forward
-          } else if (text[cur] === '"') {
+          if (expect('\\')) {
+            cur++; // escaped char, move forward
+          } else if (expect('"')) {
             state = 'js';
-            cur++;
-          } else {
-            cur++;
-          }
-        break;
-        case 'backtick':
-          if (text[cur] === '\\') {
-            cur += 2; // escaped char, move forward
-          } else if (text[cur] === '`') {
-            state = 'js';
-            cur++;
           } else {
             cur++;
           }
         break;
         case 'mcomment':
-          if (text[cur] === '*' && text[cur+1] === '/') {
+          if (expect('\n')) {
+            nl(); // pad new line in multiline comment
+          } else if (expect('*/')) {
             state = 'js';
-            cur+=2;
+            start = cur; // move cursor so we don't print comment into source
           } else {
             cur++;
           }
         break;
         case 'scomment':
-          if (text[cur] === '\n') {
+          if (expect('\n')) {
+            nl();
             state = 'js';
-            cur++;
-            start = cur;
+            start = cur; // move cursor so we don't print comment into source
           } else {
             cur++;
           }
@@ -143,20 +157,22 @@ ojsTemplate.prototype = {
     }
     switch (state) {
       case 'html':
-        if (start !== cur) {
-          this.source += 'await print(' + JSON.stringify(text.substring(start, cur)) + ');';
-        }
+        appendAndSkip();
       break;
       case 'js':
       case 'squote':
       case 'dquote':
       case 'backtick':
       case 'mcomment':
-        this.rethrow('Unexpected end of file, missing closing ?> tag');
+        this.rethrow('Unexpected end of file', lines.length);
       break;
     }
 
-    let syntaxError = check('(async function () { ' + this.source + ' ;})();', this.filename);
+    this.source = source.join('');
+
+    // console.log(this.source);
+
+    let syntaxError = check('(async function () { ' + this.source + ' })();', this.filename);
     if (syntaxError) this.rethrow(syntaxError, syntaxError.line);
 
     this.source = `let __line = 1; try { ` + this.source + ` } catch (e) { rethrow(e, __line); }`;
@@ -215,7 +231,8 @@ module.exports = {
       await template.compile();
       await template.render(context);
     } catch (e) {
-      context.print(e.message);
+      console.log(e.message);
+      context.print('<pre>' + e.message.replace(/</g, '&lt;') + '</pre>');
     }
   }
 };

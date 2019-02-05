@@ -1,7 +1,6 @@
 const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
 
-const ejs = require('./ejs-promise/ojs'); // temporary "proves the concept" library
-// ejs.delimiter = '?'; // php style :D
+const ejs = require('.//ojs');
 
 const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
 
