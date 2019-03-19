@@ -93,7 +93,7 @@ const main = async () => {
       res, // our writableStream
       './src/pages/' + filename + '.ojs', // our template file
       ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent, cookie and setCookie()
-      express: ojsExpress(req, res) // we can also do this if we can put all of that in scope of an express object instead of top level
+      express: ojsExpress(req, res) // we can also do this if we want to put all of that in scope of an express object instead of top level
     });
     // render complete, res.end() sent, clean up
   });
@@ -119,7 +119,7 @@ Example as before but with:
 const ojsi18n = require('osiris-ojs/i18n');
 
 await osiris.render(writeFile, file, {
-  i18n: ojsi18n.locale(locale), // locale being the users current locale
+  i18n: ojsi18n.locale(locale), // locale being the viewers current locale, exposes: t(), d(), n(), locale, locales, setLocale()
 });
 ```
 
