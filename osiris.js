@@ -108,5 +108,5 @@ module.exports.use = (...modules) => {
 module.exports.render = (writeStream, filename, ...modules) => {
   let osiris = new Osiris(writeStream);
   copyScopes(osiris, modules);
-  return osiris.render(filename);
+  osiris.render(filename);
 };
