@@ -63,7 +63,6 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `css: (str)`, bundles collections of CSS for footer insertion
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
-- `onClose`, this callback is provided by OJS for unexpected user connection closing, for clean up tasks that may need to be done
 
 ## Osiris express
 Osiris comes with hooks to get to the most basic functionality within express, usage:
