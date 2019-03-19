@@ -1,0 +1,17 @@
+
+1) html-to-js
+
+2) <?="js escaped \"print\n" ?>
+
+3) <? await print('await print semi comment'); // comment here
+?>
+
+4) <? await print('await print') ?>
+
+5) <?='tag print semi comment'; // comment here
+?>
+
+6) <?='tag print comment' // comment here
+?>
+
+7)

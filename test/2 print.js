@@ -209,4 +209,34 @@ describe('OJS print tests', () => {
       expect(result).to.equal(`'"test"'`);
     });
   });
+
+  describe('render print-state-switch.ojs', () => {
+    let output, context, result;
+
+    beforeEach(async () => {
+      output = new streamBuffers.WritableStreamBuffer();
+      context = { };
+      await ojs.renderFile(output, './test/templates/print-state-switch.ojs', context);
+      result = output.getContentsAsString('utf8');
+    });
+
+    it('Should should preserve line breaks in html', () => {
+      expect(result).to.have.string('\n1) html-to-js\n\n2)');
+    });
+    it('Should should understand quotes and escaped chars', () => {
+      expect(result).to.have.string('2) js escaped "print\n\n3)');
+    });
+    it('Should should print with comments and semicolons', () => {
+      expect(result).to.have.string('3) await print semi comment\n4)');
+    });
+    it('Should should print without comments and semicolons', () => {
+      expect(result).to.have.string('4) await print\n5)');
+    });
+    it('Should should print tag with comments and semicolons', () => {
+      expect(result).to.have.string('5) tag print semi comment\n6)');
+    });
+    it('Should should print tag without semicolons with comments', () => {
+      expect(result).to.have.string('6) tag print comment\n7)');
+    });
+  });
 });

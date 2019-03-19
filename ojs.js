@@ -60,8 +60,6 @@ ojsTemplate.prototype = {
           }
         } else if (state === 'html') {
           source.push('await print(' + JSON.stringify(code) + ');');
-        } else {
-          throw 'Tried to append in wrong state: ' + state;
         }
       }
       cur += skip;
@@ -168,13 +166,16 @@ ojsTemplate.prototype = {
       break;
     }
 
+    // joining arrays is slightly faster than appending strings
     this.source = source.join('');
 
     // console.log(this.source);
 
+    // use syntax-error to check the compiled source code
     let syntaxError = check('(async function () { ' + this.source + ' })();', this.filename);
     if (syntaxError) this.rethrow(syntaxError, syntaxError.line);
 
+    // wrap our source in a try catch with using our rethrower function
     this.source = `let __line = 1; try { ` + this.source + ` } catch (e) { rethrow(e, __line); }`;
   },
   render: async function (context) {
@@ -182,6 +183,7 @@ ojsTemplate.prototype = {
     let argNames = ['rethrow'];
     let args = [this.rethrow];
     for (let key in context) {
+      // bind functions and assign variables to scope
       argNames.push(key);
       if (typeof context[key] === 'function') {
         args.push(context[key].bind(context));
@@ -190,21 +192,22 @@ ojsTemplate.prototype = {
       }
     }
 
+    // create our function using the constructor, taking our scope arg names
     const fn = new AsyncFunction(argNames.join(', '), this.source);
-    await fn.apply({}, args);
+    await fn.apply({}, args); // run the function
   }
 };
 
 module.exports = {
   renderFile: async (writeStream, filename, context) => {
     if (!writeStream.on || !writeStream.write) {
-      throw new Error('renderFile(writeStream, filename, context): expects first argument to be a writable stream');
+      throw new Error('ojs.renderFile(writeStream, filename, context): expects first argument to be a writable stream');
     }
     if (await fs.exists(filename) === false) {
-      throw new Error('renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
+      throw new Error('ojs.renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
     }
     if (typeof context !== 'object') {
-      throw new Error('renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
+      throw new Error('ojs.renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
     }
 
     // setup stream handling
@@ -218,8 +221,6 @@ module.exports = {
 
     const print = async (text) => {
       // write directly to stream, return/resolve an empty string
-      if (!streamOpen) throw 'closed';
-
       text = await text;
       text = text.toString();
       if (text.length === 0) return '';
@@ -228,10 +229,10 @@ module.exports = {
         const resolve = () => res('');
 
         try {
-          if (!writeStream.write(text)) {
-            writeStream.once('drain', resolve);
+          if (!writeStream.write(text)) { // returns false if buffering output
+            writeStream.once('drain', resolve); // resolve once stream is drained
           } else {
-            process.nextTick(resolve);
+            process.nextTick(resolve); // resolve on next tick, allow other requests to finish
           }
         } catch (e) {
           resolve(); // silence write errors

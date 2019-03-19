@@ -9,7 +9,7 @@ const streamBuffers = require('stream-buffers');
 const ojs = require('../ojs');
 
 describe('ojs specification tests', () => {
-  describe('.renderFile()', () => {
+  describe('ojs.renderFile', () => {
     it('Should be a function', () => {
       expect(ojs.renderFile).to.be.a('function');
     });
