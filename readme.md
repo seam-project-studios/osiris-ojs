@@ -38,7 +38,7 @@ Designed to facility code re-use and organisation of files
 [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
 
 ## Basic Osiris build example
-```
+```javascript
 const osiris = require('./osiris'); // renderer
 
 // we can inject things into scope to be used by all renderings
