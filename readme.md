@@ -64,3 +64,43 @@ Osiris the following functions to the templates, as well as the default print() 
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
 - `onClose`, this callback is provided by OJS for unexpected user connection closing, for clean up tasks that may need to be done
+
+## Osiris express
+Osiris comes with hooks to get to the most basic functionality withing express, usage:
+```javascript
+const osiris = require('osiris-ojs');
+const ojsExpress = require('osiris-ojs/express');
+
+const express = require('express');
+const app = express();
+const main = async () => {
+  app.use(async (req, res, next) => { // anything not served lands here
+    let filename = req.path.substr(1); // trim starting /
+
+    if (filename === '') {
+      filename = 'index'; // default page for directory index
+    }
+
+    if (!await fs.exists('./src/pages/' + filename + '.ojs')) {
+      return next(); // file doesn't exist, bail
+    }
+
+    res.header('content-type', 'text/html'); // we have something
+
+    // call renderer with our addons, we can block here with await if we need any clean up after render
+    await osiris.render(res, './src/pages/' + filename + '.ojs', {
+      express: ojsExpress(req, res) // this gives templates access to get, post, header() and headersSent
+    });
+    // render complete, res.end() sent, clean up
+  });
+};
+
+main();
+```
+### API
+- `get`, object containing get variables, parsed by `url.parse`
+- `post`, object containing post variables, taken from `req.body`
+- `this.header = (...args)`, calls `res.header`
+- `headersSent`, boolean if headers have been sent yet
+- `cookie`, object containing cookie variables, taken from `req.cookies`
+- `setCookie = (...args)`, calls `res.cookie`
