@@ -2,8 +2,6 @@ const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and com
 
 const ojs = require('./ojs');
 
-const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
-
 // html entity quote function, exposed for changes
 module.exports.qMap = {
   '&': '&amp;',
@@ -23,8 +21,7 @@ const s = {
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Osiris = function (writeStream) {
-  // use memory buffered writeStream if none is provided
-  this[s.writeStream] = writeStream || new streamBuffers.WritableStreamBuffer();
+  this[s.writeStream] = writeStream;
 
   // set up variables in "this" scope
   this.locals = {}; // global scope for templates
@@ -36,30 +33,20 @@ Osiris.prototype = {
   // call this to render a file
   render: async function (filename) {
     delete this.render; // run once
-
-    let html;
-    try {
-      html = await this[s.render](filename, {});
-    } catch (e) {
-      this.print('A compilation error occured: ' + await this.q(e.message));
-    } finally {
-      this[s.writeStream].end(); // we're done
-    }
-
-    if (this[s.writeStream].getContents) return this[s.writeStream].getContents(); // patch for streamBuffers
-    return html;
+    await this[s.render](filename, {}); // render with empty args
+    this[s.writeStream].end(); // we're done
   },
 
   // our render function, ojs needs a filename and an object representing local scope
   [s.render]: async function (filename, args = {}) {
-    // copy any args we had and nuke the scope for the next template
+    // copy args to scope and preserve previous scopes args
     const previousArgs = this.args;
     this.args = args;
     await ojs.renderFile(this[s.writeStream], filename, this);
     this.args = previousArgs;
-    return '';
   },
 
+  // callback incase we need to do any clean up if the user quits half way through a render
   onClose: function () {
     console.log('User closed stream!');
   },
