@@ -176,4 +176,19 @@ describe('OJS error tests', () => {
       expect(result).to.have.string('context-func.ojs:1');
     });
   });
-});
+
+  describe('render error-line-20.ojs', () => {
+    let output, context, result;
+
+    beforeEach(async () => {
+      output = new streamBuffers.WritableStreamBuffer();
+      context = { };
+      await ojs.renderFile(output, './test/templates/error-line-20.ojs', context);
+      result = output.getContentsAsString('utf8');
+    });
+
+    it('Should indicate error, file and line', () => {
+      expect(result).to.have.string('Message: error is not defined');
+      expect(result).to.have.string('error-line-20.ojs:20');
+    });
+  });});

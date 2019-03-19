@@ -8,14 +8,14 @@ const streamBuffers = require('stream-buffers');
 // what we're testing
 const ojs = require('../ojs');
 
-describe('OJS specification tests', () => {
+describe('ojs specification tests', () => {
   describe('.renderFile()', () => {
     it('Should be a function', () => {
       expect(ojs.renderFile).to.be.a('function');
     });
   });
 
-  describe('.renderFile(writeStream, filename, context)', () => {
+  describe('ojs.renderFile(writeStream, filename, context)', () => {
     let output, context, caught, testFile = './test/templates/html-only.ojs';
 
     beforeEach(() => {

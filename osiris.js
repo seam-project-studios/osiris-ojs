@@ -18,8 +18,7 @@ const s = {
   writeStream: Symbol('writeStream'),
   render: Symbol('render'),
   jsBundle: Symbol('jsBundle'),
-  cssBundle: Symbol('cssBundle'),
-  haltOjs: Symbol('haltOjs')
+  cssBundle: Symbol('cssBundle')
 };
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
@@ -51,8 +50,7 @@ Osiris.prototype = {
     return html;
   },
 
-  // our render function, ejs needs a filename, an object representing local scope and some options
-  // gives us a callback to hook our pipes and a promise that resolve to the completely rendered template
+  // our render function, ojs needs a filename and an object representing local scope
   [s.render]: async function (filename, args = {}) {
     // copy any args we had and nuke the scope for the next template
     const previousArgs = this.args;
@@ -66,6 +64,7 @@ Osiris.prototype = {
     console.log('User closed stream!');
   },
 
+  // quote a function according to exports.qMap, return a promise if given a promise
   q: (str='') => {
     const doQ = (str) => str.split('').map(c => module.exports.qMap[c] || c).join('');
 

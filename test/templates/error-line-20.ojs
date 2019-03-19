@@ -1,0 +1,21 @@
+<?
+
+// test comment
+
+/*
+
+test multiline comment
+
+some lines with stuff,
+some without
+*/
+?>
+
+<p>Test</p>
+
+<?
+
+await print('<p>test</p>');
+
+error
+?>
