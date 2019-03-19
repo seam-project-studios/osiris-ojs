@@ -37,7 +37,7 @@ for (let x=1; x<=10; x++) {
 for (let x=1; x<=10; x++) {
   wait(rand()).then(y => print('<li>'+ x +' took ' + y + ' msec</li>'));
 }
-await wait(10); // to make sure it finished
+await wait(10); // be sure we are going to wait
 ?>
 </ol>
 

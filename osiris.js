@@ -1,6 +1,6 @@
 const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
 
-const ejs = require('.//ojs');
+const ojs = require('./ojs');
 
 const streamBuffers = require('stream-buffers'); // patch for streamless returning of html
 
@@ -55,7 +55,7 @@ Osiris.prototype = {
     // copy any args we had and nuke the scope for the next template
     const previousArgs = this.args;
     this.args = args;
-    await ejs.renderFile(this[s.writeStream], filename, this);
+    await ojs.renderFile(this[s.writeStream], filename, this);
     this.args = previousArgs;
     return '';
   },

@@ -1,13 +1,6 @@
 <?
-css(`
-input[type=text] {
-  border: 1px SOLID black;
-}
-`);
-
-js(`
-console.log('input-text', '${JSON.stringify(args)}');
-`);
+css('input[type=text] { border: 1px SOLID black; }');
+js("console.log('input-text', " + JSON.stringify(args) + ");");
 ?>
 
 <label>

@@ -54,7 +54,7 @@ ojsTemplate.prototype = {
         let code = text.substring(start, cur);
         if (state === 'js') {
           if (code[0] === '=') {
-            source.push('await print(' + code.substr(1).replace(/;$/, '') + ');');
+            source.push('await print(' + code.substr(1).replace(/;\s*$/, '') + ');');
           } else {
             source.push(code);
           }
@@ -100,7 +100,8 @@ ojsTemplate.prototype = {
           } else if (expect('/*', false)) {
             appendAndSkip(2);
             state = 'mcomment';
-          } else if (expect('//')) {
+          } else if (expect('//', false)) {
+            appendAndSkip(2);
             state = 'scomment';
           } else if (expect('?>', false)) {
             appendAndSkip(2);
