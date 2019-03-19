@@ -55,7 +55,7 @@ Osiris.prototype = {
     // copy any args we had and nuke the scope for the next template
     const previousArgs = this.args;
     this.args = args;
-    await ejs.renderFile(this[s.writeStream], filename, this, {});
+    await ejs.renderFile(this[s.writeStream], filename, this);
     this.args = previousArgs;
     return '';
   },
