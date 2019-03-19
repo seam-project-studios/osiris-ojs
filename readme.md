@@ -89,14 +89,16 @@ const main = async () => {
     res.header('content-type', 'text/html'); // we have something
 
     // call renderer with our addons, we can block here with await if we need any clean up after render
-    await osiris.render(res, './src/pages/' + filename + '.ojs', {
-      express: ojsExpress(req, res) // this gives templates access to get, post, header() and headersSent
+    await osiris.render(
+      res, // our writableStream
+      './src/pages/' + filename + '.ojs', // our template file
+      ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent, cookie and setCookie()
+      express: ojsExpress(req, res) // we can also do this if we can put all of that in scope of an express object instead of top level
     });
     // render complete, res.end() sent, clean up
   });
-  await app.listen(HTTP_PORT, () => {
-    console.log('Node process listening on ' + HTTP_PORT);
-  });
+  await app.listen(HTTP_PORT);
+  console.log('Node process listening on ' + HTTP_PORT);
 };
 
 main();
@@ -108,3 +110,21 @@ main();
 - `headersSent`, boolean if headers have been sent yet
 - `cookie`, object containing cookie variables, taken from `req.cookies`
 - `setCookie = (...args)`, calls `res.cookie`
+
+## Osiris i18n
+Designed to facilitate internationalisation of HTML templates, example as before but with:
+```javascript
+const ojsi18n = require('osiris-ojs/i18n');
+
+await osiris.render(writeFile, file, {
+  i18n: ojsi18n.locale(locale), // locale being the users current locale
+});
+```
+
+### Osiris i18n API
+`locale`, string of current locale
+`setLocale: (localeString)`, sets the locale for the current request
+`locales`, array containing string of all available locales
+`t: async (namespaceString)`, translates a locale looking in `src/locales/`locale for .js or .json files or folders matching the namespaceString
+`d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+`n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat

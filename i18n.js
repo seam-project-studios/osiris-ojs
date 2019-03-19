@@ -86,7 +86,7 @@ const OjsI18n = function(localeString) {
   this.setLocale(localeString);
 
   // localize text by looking in locale/
-  this.t = async (namespaceString, options) => {
+  this.t = async (namespaceString) => {
     let t = await traverseObj(await textLocales, [locale].concat(namespaceString.split('.')));
 
     if (t === false) return '[locale.' + locale + '.' + namespaceString + ']';
