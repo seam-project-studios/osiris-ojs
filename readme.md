@@ -103,7 +103,7 @@ const main = async () => {
 
 main();
 ```
-### Osiris express API
+## Osiris express API
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
 - `this.header = (...args)`, calls `res.header`
@@ -112,7 +112,9 @@ main();
 - `setCookie = (...args)`, calls `res.cookie`
 
 ## Osiris i18n
-Designed to facilitate internationalisation of HTML templates, example as before but with:
+Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the `src/locales/` folder for folders for each locale, then searches within those for translations
+
+Example as before but with:
 ```javascript
 const ojsi18n = require('osiris-ojs/i18n');
 
@@ -123,7 +125,7 @@ await osiris.render(writeFile, file, {
 
 More complete examples in [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js) and [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
 
-### Osiris i18n API
+## Osiris i18n API
 - `locale`, string of current locale
 - `setLocale: (localeString)`, sets the locale for the current request
 - `locales`, array containing string of all available locales
