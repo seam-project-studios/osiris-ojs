@@ -56,7 +56,7 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 
 ## Osiris API
 Osiris the following functions to the templates, as well as the default print() provided by OJS
-- `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes
+- `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
 - `snippet: async (filename, args)`, renders filename found in src/snippets/`filename`.ojs with the arguments provided as `args` to the template
 - `element: async (filename, args)`, renders filename found in src/elements/`filename`.ojs with the arguments provided as `args` to the template
 - `js: (str)`, bundles collections of Javascript for footer insertion
