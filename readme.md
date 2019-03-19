@@ -121,6 +121,8 @@ await osiris.render(writeFile, file, {
 });
 ```
 
+More complete examples in [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js) and [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
+
 ### Osiris i18n API
 - `locale`, string of current locale
 - `setLocale: (localeString)`, sets the locale for the current request
@@ -128,4 +130,3 @@ await osiris.render(writeFile, file, {
 - `t: async (namespaceString)`, translates a locale looking in `src/locales/[locale]` for .js or .json files or folders matching the namespaceString
 - `d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
 - `n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
-
