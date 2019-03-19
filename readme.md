@@ -122,9 +122,10 @@ await osiris.render(writeFile, file, {
 ```
 
 ### Osiris i18n API
-`locale`, string of current locale
-`setLocale: (localeString)`, sets the locale for the current request
-`locales`, array containing string of all available locales
-`t: async (namespaceString)`, translates a locale looking in `src/locales/`locale for .js or .json files or folders matching the namespaceString
-`d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
-`n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
+- `locale`, string of current locale
+- `setLocale: (localeString)`, sets the locale for the current request
+- `locales`, array containing string of all available locales
+- `t: async (namespaceString)`, translates a locale looking in `src/locales/`locale for .js or .json files or folders matching the namespaceString
+- `d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
+- `n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
+
