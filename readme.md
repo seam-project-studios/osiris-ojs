@@ -73,6 +73,7 @@ const ojsExpress = require('osiris-ojs/express');
 
 const express = require('express');
 const app = express();
+const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
 const main = async () => {
   app.use(async (req, res, next) => { // anything not served lands here
     let filename = req.path.substr(1); // trim starting /
