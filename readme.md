@@ -1,7 +1,7 @@
 # Osiris and OJS
 
-## OJS
-is an asyncronous pure Javascript template engine designed to build static sites or be used live with express
+## OJS is an asyncronous Javascript template engine.
+Designed to build static sites or be used with express.
 
 Basic syntax:
 ```javascript
@@ -19,6 +19,5 @@ await print('<p>Everything is asyncronous here</p>');
 </html>
 ```
 
-## Osiris
-is a framework built on top of OJS, designed to facility code re-use and simple organisation of files
-
+## Osiris is a framework built on top of OJS
+Designed to facility code re-use and simple organisation of files
