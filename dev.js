@@ -25,7 +25,7 @@ const main = async () => {
 
   app.use(express.static('src/pages/')); // serve pages folder
 
-  // expose a global link function for 118n support
+  // expose a global link function for i18n support
   osiris.use({
     link: (path) => path, // this is more for linking between built pages than express
     // we'll use a simple query string to change locale, this may not work if you keep state (like IDs) in the query string

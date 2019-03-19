@@ -4,9 +4,8 @@ const fs = require('mz/fs');
 const check = require('syntax-error');
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
-const ojsTemplate = function (filename, opts) {
+const ojsTemplate = function (filename) {
   this.filename = filename;
-  this.opts = opts;
   this.source = '';
 };
 
@@ -196,12 +195,24 @@ ojsTemplate.prototype = {
 };
 
 module.exports = {
-  renderFile: async (writeStream, filename, context, opts) => {
+  renderFile: async (writeStream, filename, context) => {
+    if (!writeStream.on || !writeStream.write) {
+      throw new Error('renderFile(writeStream, filename, context): expects first argument to be a writable stream');
+    }
+    if (await fs.exists(filename) === false) {
+      throw new Error('renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
+    }
+    if (typeof context !== 'object') {
+      throw new Error('renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
+    }
+
     // setup stream handling
     let streamOpen = true;
     if (!writeStream.__osirisHooked) {
       writeStream.__osirisHooked = true;
-      writeStream.on('close', () => { streamOpen = false; context.onClose.apply(context); });
+      const onClose = () => { streamOpen = false; if (context.onClose) context.onClose.apply(context); };
+      writeStream.on('close', onClose); // close is needed for sockets
+      writeStream.on('end', onClose); // end is needed for stream buffers
     }
 
     const print = async (text) => {
@@ -215,10 +226,14 @@ module.exports = {
       return new Promise((res, rej) => {
         const resolve = () => res('');
 
-        if (!writeStream.write(text)) {
-          writeStream.once('drain', resolve);
-        } else {
-          process.nextTick(resolve);
+        try {
+          if (!writeStream.write(text)) {
+            writeStream.once('drain', resolve);
+          } else {
+            process.nextTick(resolve);
+          }
+        } catch (e) {
+          resolve(); // silence write errors
         }
       });
     };
@@ -226,12 +241,12 @@ module.exports = {
     // inject print function into context
     context.print = print.bind(context);
 
-    let template = new ojsTemplate(filename, opts);
+    let template = new ojsTemplate(filename)
     try {
       await template.compile();
       await template.render(context);
     } catch (e) {
-      console.log(e.message);
+      // console.log(e.message);
       context.print('<pre>' + e.message.replace(/</g, '&lt;') + '</pre>');
     }
   }

@@ -9,7 +9,8 @@
     "dev": "concurrently \"nodemon dev.js --ignore template/\"",
     "static": "concurrently \"nodemon static.js\"",
     "build": "node build.js",
-    "docs": "gitbook install && gitbook serve"
+    "docs": "gitbook install && gitbook serve",
+    "test": "mocha"
   },
   "dependencies": {
     "async-require": "^1.2.2",
@@ -24,13 +25,16 @@
     "npm": ">=5.6.0"
   },
   "devDependencies": {
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "concurrently": "^3.6.0",
+    "express": "^4.16.3",
     "gitbook": "^3.2.3",
     "gitbook-cli": "^2.3.2",
     "gitbook-plugin-code": "^0.1.0",
-    "body-parser": "^1.18.3",
-    "express": "^4.16.3",
-    "nodemon": "^1.17.5"
+    "mocha": "^6.0.2",
+    "nodemon": "^1.17.5",
+    "sinon": "^7.2.7"
   },
   "nodemonConfig": {
     "ignore": [
