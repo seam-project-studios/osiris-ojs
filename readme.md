@@ -1,6 +1,6 @@
 # Osiris and OJS
 
-## OJS is an asyncronous Javascript template engine.
+## OJS is an asynchronous Javascript template engine.
 Designed to build static sites or be used with express.
 
 Basic template syntax:
@@ -21,7 +21,7 @@ const myFunction = async () => { // async lets us await
 <body>
 <?
 await print('<p>We must await our print statements</p>');
-await print('<p>Everything is asyncronous here</p>');
+await print('<p>Everything is asynchronous here</p>');
 await myFunction(); // we can await our own functions too
 ?>
 </body>
