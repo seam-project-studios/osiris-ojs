@@ -68,6 +68,7 @@ Osiris the following functions to the templates, as well as the default print() 
 ## Osiris express
 Osiris comes with hooks to get to the most basic functionality withing express, usage:
 ```javascript
+const HTTP_PORT = 8080;
 const osiris = require('osiris-ojs');
 const ojsExpress = require('osiris-ojs/express');
 
@@ -93,11 +94,14 @@ const main = async () => {
     });
     // render complete, res.end() sent, clean up
   });
+  await app.listen(HTTP_PORT, () => {
+    console.log('Node process listening on ' + HTTP_PORT);
+  });
 };
 
 main();
 ```
-### API
+### Osiris express API
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
 - `this.header = (...args)`, calls `res.header`
