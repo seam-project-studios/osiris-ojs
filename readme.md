@@ -112,7 +112,7 @@ main();
 - `setCookie = (...args)`, calls `res.cookie`
 
 ## Osiris i18n
-Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the `src/locales/` folder for folders for each locale, then searches within those for translations
+Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the src/locales/ folder for folders for each locale, then searches within those for translations
 
 Example as before but with:
 ```javascript
@@ -129,6 +129,6 @@ More complete examples in [Example express hook](https://github.com/seam-project
 - `locale`, string of current locale
 - `setLocale: (localeString)`, sets the locale for the current request
 - `locales`, array containing string of all available locales
-- `t: async (namespaceString)`, translates a locale looking in `src/locales/[locale]` for .js or .json files or folders matching the namespaceString
+- `t: async (namespaceString)`, translates a locale looking in src/locales/`locale` for .js or .json files or folders matching the namespaceString
 - `d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
 - `n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
