@@ -66,6 +66,7 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
 - `locals`, a persistant object that allows for a global namespace between template calls
+- `onClose: callback`, bind a function to this hook to be called when the connection is lost mid-template
 
 ---
 
