@@ -29,7 +29,12 @@ await myFunction(); // we can await our own functions too
 ```
 
 ## Osiris is a framework built on top of OJS [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
-Designed to facility code re-use and organisation of files
+Designed to facility code re-use and organisation of files, Osiris and its modules are all built with asynchronicity in mind to allows IO requests to not bottleneck the system.
+Files are organised into your projects `./src/` with the following folders:
+- `elements/`, calls to `element()` are resolved here
+- `snippets/`, calls to `snippet()` are resolved here
+- `locales/`, for i18n support
+- `pages/`, the web root, landing page templates go here
 
 - [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
 - [Example build and host static](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
