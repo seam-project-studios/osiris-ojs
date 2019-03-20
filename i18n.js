@@ -114,7 +114,7 @@ const OjsI18n = function(localeString) {
   });
 };
 
-module.exports = async (opts) => {
+module.exports = async () => {
   await textLocales;
   return {
     locales: Object.keys(data),

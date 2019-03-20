@@ -3,7 +3,7 @@
 ## OJS is an asynchronous Javascript template engine.
 Designed to build static sites or be used with express.
 
-Basic template syntax:
+## OJS Template syntax:
 ```javascript
 <?
 // we start our javascript content with <? and end it with ?>
@@ -35,7 +35,7 @@ Designed to facility code re-use and organisation of files
 - [Example build and host static](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
 - [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
 
-## Basic Osiris build example
+## Osiris build example
 ```javascript
 const osiris = require('osiris-ojs'); // renderer
 
@@ -65,17 +65,17 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `bundleCss`, retrieves the CSS bundle for output
 
 ## Osiris express
-Osiris comes with hooks to get to the most basic functionality within express, usage:
+Osiris comes with hooks to get functionality within express, usage:
 ```javascript
 const HTTP_PORT = 8080;
 const osiris = require('osiris-ojs');
 const ojsExpress = require('osiris-ojs/express');
-
 const express = require('express');
 const app = express();
 const fs = require('mz/fs'); // modernizer fs uses promises instead of callbacks
+
 const main = async () => {
-  app.use(async (req, res, next) => { // anything not served lands here
+  app.use(async (req, res, next) => {
     let filename = req.path.substr(1); // trim starting /
 
     if (filename === '') {
@@ -103,7 +103,7 @@ const main = async () => {
 
 main();
 ```
-## Osiris express API
+## Osiris express template API
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
 - `this.header = (...args)`, calls `res.header`
@@ -116,7 +116,7 @@ Designed to facilitate internationalisation of HTML templates.  It does this by 
 
 Example as before but with:
 ```javascript
-const ojsi18n = require('osiris-ojs/i18n');
+const ojsi18n = await require('osiris-ojs/i18n')(); // searches for locales and exposes nodeJS API
 
 await osiris.render(writeFile, file, {
   i18n: ojsi18n.locale(locale), // locale being the viewers current locale, exposes: t(), d(), n(), locale, locales, setLocale()
@@ -125,7 +125,11 @@ await osiris.render(writeFile, file, {
 
 More complete examples in [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js) and [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
 
-## Osiris i18n API
+## Osiris nodeJS API
+- `locales`, array of strings of locales available
+- `locale: (localeString)`, returns template API for `localeString`
+
+## Osiris i18n template API
 - `locale`, string of current locale
 - `setLocale: (localeString)`, sets the locale for the current request
 - `locales`, array containing string of all available locales
