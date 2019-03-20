@@ -1,6 +1,6 @@
 # Osiris and OJS
 
-## OJS is an asynchronous Javascript template engine.
+## OJS is an asynchronous Javascript template engine [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/ojs.js)
 Designed to build static sites or be used with express.
 
 ## OJS Template syntax:
@@ -28,7 +28,7 @@ await myFunction(); // we can await our own functions too
 </html>
 ```
 
-## Osiris is a framework built on top of OJS
+## Osiris is a framework built on top of OJS [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Designed to facility code re-use and organisation of files
 
 - [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
@@ -54,7 +54,7 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 });
 ```
 
-## Osiris API
+## Osiris API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
 - `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
 - `snippet: async (filename, args)`, renders filename found in src/snippets/`filename`.ojs with the arguments provided as `args` to the template
@@ -64,7 +64,7 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
 
-## Osiris express
+## Osiris express [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
 Osiris comes with hooks to get functionality within express, usage:
 ```javascript
 const HTTP_PORT = 8080;
@@ -103,7 +103,7 @@ const main = async () => {
 
 main();
 ```
-## Osiris express template API
+## Osiris express template API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
 - `header: (...args)`, calls `res.header`
@@ -111,7 +111,7 @@ main();
 - `cookie`, object containing cookie variables, taken from `req.cookies`
 - `setCookie: (...args)`, calls `res.cookie`
 
-## Osiris i18n
+## Osiris i18n [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/i18n.js)
 Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the src/locales/ folder for folders for each locale, then searches within those for translations
 
 Example as before but with:
@@ -125,7 +125,7 @@ await osiris.render(writeFile, file, {
 
 More complete examples in [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js) and [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
 
-## Osiris nodeJS API
+## Osiris i18n nodeJS API
 - `locales`, array of strings of locales available
 - `locale: (localeString)`, returns template API for `localeString`
 
