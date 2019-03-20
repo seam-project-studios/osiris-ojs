@@ -54,7 +54,7 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 });
 ```
 
-## Osiris API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
+## Osiris API [[src]](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
 - `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
 - `snippet: async (filename, args)`, renders filename found in src/snippets/`filename`.ojs with the arguments provided as `args` to the template
