@@ -47,9 +47,9 @@ Osiris.prototype = {
   },
 
   // callback incase we need to do any clean up if the user quits half way through a render
-  onClose: function () {
-    console.log('User closed stream!');
-  },
+  //onClose: function () {
+  //  console.log('User closed stream!');
+  //},
 
   // quote a function according to exports.qMap, return a promise if given a promise
   q: (str='') => {
