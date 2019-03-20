@@ -1,7 +1,7 @@
 # Osiris and OJS
 
 ## OJS is an asynchronous Javascript template engine [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/ojs.js)
-Designed to build static sites or be used with express.
+Designed to build static sites or be used with express using simple template syntax that supports native JS within templates. This has been achieved by writing a parser from scratch to achieve full async/await abilities. OJS only provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. An onClose callback is called on context if one exists when a connection closes before the end of the template.
 
 ## OJS Template syntax:
 ```javascript
