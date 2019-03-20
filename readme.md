@@ -106,10 +106,10 @@ main();
 ## Osiris express template API
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
-- `this.header = (...args)`, calls `res.header`
+- `header: (...args)`, calls `res.header`
 - `headersSent`, boolean if headers have been sent yet
 - `cookie`, object containing cookie variables, taken from `req.cookies`
-- `setCookie = (...args)`, calls `res.cookie`
+- `setCookie: (...args)`, calls `res.cookie`
 
 ## Osiris i18n
 Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the src/locales/ folder for folders for each locale, then searches within those for translations
