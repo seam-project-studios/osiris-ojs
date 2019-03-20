@@ -54,7 +54,9 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 });
 ```
 
-## Osiris API [[src]](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
+---
+
+## Osiris API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
 - `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
 - `snippet: async (filename, args)`, renders filename found in src/snippets/`filename`.ojs with the arguments provided as `args` to the template
@@ -63,6 +65,8 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `css: (str)`, bundles collections of CSS for footer insertion
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
+
+---
 
 ## Osiris express [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
 Osiris comes with hooks to get functionality within express, usage:
@@ -110,6 +114,8 @@ main();
 - `headersSent`, boolean if headers have been sent yet
 - `cookie`, object containing cookie variables, taken from `req.cookies`
 - `setCookie: (...args)`, calls `res.cookie`
+
+---
 
 ## Osiris i18n [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/i18n.js)
 Designed to facilitate internationalisation of HTML templates.  It does this by JIT searching the src/locales/ folder for folders for each locale, then searches within those for translations
