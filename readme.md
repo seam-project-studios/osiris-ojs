@@ -46,7 +46,8 @@ Please check out our examples:
 
 ## Osiris build example
 ```javascript
-const osiris = require('osiris-ojs'); // renderer
+const fs = require('fs');
+const osiris = require('osiris-ojs');
 
 // we can inject things into scope to be used by all renderings
 osiris.use({
