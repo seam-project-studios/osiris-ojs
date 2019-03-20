@@ -40,9 +40,9 @@ Files are organised into your projects `./src/` with the following folders:
 - `pages/`, the web root, landing page templates go here
 
 Please check out our examples:
-- [Express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
-- [Build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
-- [Build and host static](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
+- [Using express](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
+- [Using a build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
+- [Build and host static with express](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
 
 ## Osiris build example
 ```javascript
@@ -140,7 +140,10 @@ await osiris.render(writeFile, file, {
 });
 ```
 
-More complete examples in [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js) and [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
+More complete examples:
+- [Using express](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
+- [Using a build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
+- [Build and host static with express](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
 
 ## Osiris i18n nodeJS API
 - `locales`, array of strings of locales available
