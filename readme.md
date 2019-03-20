@@ -1,7 +1,9 @@
 # Osiris and OJS
 
 ## OJS is an asynchronous Javascript template engine [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/ojs.js)
-Designed to build static sites or be used with express using simple template syntax that supports native JS within templates. Written from the ground up to achieve full async/await abilities. OJS only provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. This allows for low memory and cpu usage and high throughput from a single thread.
+Designed to build static sites or be used with express using simple template syntax that supports native JS within templates. Written from the ground up to achieve full async/await abilities.
+
+OJS only provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. This allows for low memory and cpu usage and high throughput from a single thread.
 
 ## OJS Template syntax:
 ```javascript
@@ -30,6 +32,7 @@ await myFunction(); // we can await our own functions too
 
 ## Osiris is a framework built on top of OJS [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Designed to facility code re-use and organisation of files, Osiris and its modules are all built with asynchronicity in mind to allows IO requests to not bottleneck the system.
+
 Files are organised into your projects `./src/` with the following folders:
 - `elements/`, calls to `element()` are resolved here
 - `snippets/`, calls to `snippet()` are resolved here
