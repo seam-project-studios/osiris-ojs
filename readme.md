@@ -36,9 +36,10 @@ Files are organised into your projects `./src/` with the following folders:
 - `locales/`, for i18n support
 - `pages/`, the web root, landing page templates go here
 
-- [Example build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
-- [Example build and host static](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
-- [Example express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
+Please check out our examples:
+- [Express hook](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
+- [Build script](https://github.com/seam-project-studios/osiris-ojs/blob/master/build.js)
+- [Build and host static](https://github.com/seam-project-studios/osiris-ojs/blob/master/static.js)
 
 ## Osiris build example
 ```javascript
