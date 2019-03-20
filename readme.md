@@ -133,6 +133,6 @@ More complete examples in [Example express hook](https://github.com/seam-project
 - `locale`, string of current locale
 - `setLocale: (localeString)`, sets the locale for the current request
 - `locales`, array containing string of all available locales
-- `t: async (namespaceString)`, translates a locale looking in src/locales/`locale` for .js or .json files or folders matching the namespaceString
+- `t: async (namespaceString)`, splits the namespaceString by "." and recurses down src/locales/`locale`/ folders/JSON (JS and JSON files supported) structures until a valid key is found, returns "[locale.`locale`.`namespaceString`]"` on failure
 - `d: (dateObject, options?)`, localize datetime according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DateTimeFormat
 - `n: (numberObject, options?)`, localize number according to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
