@@ -5,6 +5,9 @@ Designed to build static sites or be used with express using simple template syn
 
 OJS only provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. This allows for low memory and cpu usage and high throughput from a single thread.
 
+## Installation
+`npm i --save osiris-ojs`
+
 ## OJS Template syntax:
 ```javascript
 <?
