@@ -185,13 +185,12 @@ describe('OJS print tests', () => {
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/error-backtick.ojs', context);
+      await ojs.renderFile(output, './test/templates/print-backtick.ojs', context);
       result = output.getContentsAsString('utf8');
     });
 
-    it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: Backticks are forbidden in templates');
-      expect(result).to.have.string('error-backtick.ojs:1');
+    it('Should output ' + JSON.stringify('\ntest123\n'), () => {
+      expect(result).to.equal('\ntest123\n');
     });
   });
 
@@ -237,6 +236,21 @@ describe('OJS print tests', () => {
     });
     it('Should should print tag without semicolons with comments', () => {
       expect(result).to.have.string('6) tag print comment\n7)');
+    });
+  });
+
+  describe('render print-json.ojs', () => {
+    let output, context, result;
+
+    beforeEach(async () => {
+      output = new streamBuffers.WritableStreamBuffer();
+      context = { };
+      await ojs.renderFile(output, './test/templates/print-json.ojs', context);
+      result = output.getContentsAsString('utf8');
+    });
+
+    it('Should output ' + JSON.stringify({"test":"test123"}), () => {
+      expect(result).to.equal(JSON.stringify({"test":"test123"}));
     });
   });
 });

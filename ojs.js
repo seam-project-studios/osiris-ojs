@@ -16,13 +16,13 @@ ojsTemplate.prototype = {
     let lines = text.split('\n');
 
     this.rethrow = (err, lineno) => {
-      let start = Math.max(lineno - 5, 0);
-      let end = Math.min(lines.length, lineno + 5);
+      let start = Math.max(lineno - 1, 0);
+      let end = Math.min(lines.length, lineno + 10);
 
       // Error context
       let code = lines.slice(start, end).map((line, i) => {
         var curr = i + start + 1;
-        return (curr == lineno ? ' >> ' : '    ') + curr + '| ' + line;
+        return (curr == lineno ? ' >> ' : '    ') + (curr.toString().length < end.toString().length ? ' ' : '')+ curr + '| ' + line;
       }).join('\n');
 
       // Alter exception message
@@ -36,7 +36,7 @@ ojsTemplate.prototype = {
     let cur = 0; // current character through file
     let line = 1; // current line through file
     let start = 0; // start character of current chunk
-    let state = 'html'; // html, js, scomment, mcomment, squote, dquote
+    let state = 'html'; // html, js, scomment, mcomment, squote, dquote, backtick
     let source = [];
 
     // sniff the string from cur for the next chars matching string
@@ -67,7 +67,7 @@ ojsTemplate.prototype = {
     };
     const nl = () => {
       line++;
-      source.push('\n__line++;');
+      if (state === 'html') source.push('\n');
     };
 
     while (cur < text.length) {
@@ -78,14 +78,14 @@ ojsTemplate.prototype = {
             nl();
           } else if (expect('<?', false)) {
             appendAndSkip(2);
+            source.push('__line=' + line + ';');
             state = 'js';
           } else {
             cur++;
           }
         break;
         case 'js':
-          if (expect('\n', false)) {
-            appendAndSkip(1);
+          if (expect('\n')) {
             nl();
           } else if (expect('\\')) {
             cur++; // skip escaped char
@@ -94,7 +94,7 @@ ojsTemplate.prototype = {
           } else if (expect('"')) {
             state = 'dquote';
           } else if (expect('`')) {
-            this.rethrow('Backticks are forbidden in templates', line);
+            state = 'backtick';
           } else if (expect('/*', false)) {
             appendAndSkip(2);
             state = 'mcomment';
@@ -125,6 +125,15 @@ ojsTemplate.prototype = {
           if (expect('\\')) {
             cur++; // escaped char, move forward
           } else if (expect('"')) {
+            state = 'js';
+          } else {
+            cur++;
+          }
+        break;
+        case 'backtick':
+          if (expect('\\')) {
+            cur++; // escaped char, move forward
+          } else if (expect('`')) {
             state = 'js';
           } else {
             cur++;
@@ -168,8 +177,6 @@ ojsTemplate.prototype = {
 
     // joining arrays is slightly faster than appending strings
     this.source = source.join('');
-
-    // console.log(this.source);
 
     // use syntax-error to check the compiled source code
     let syntaxError = check('(async function () { ' + this.source + ' })();', this.filename);
