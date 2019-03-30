@@ -13,7 +13,7 @@ const main = async () => {
   app.use(bodyParser.urlencoded({ extended: false }));
 
   // parse cookies into req.cookies
-  const cookieParser = require('cookie-parser')
+  const cookieParser = require('cookie-parser');
   app.use(cookieParser());
 
   // our render engine

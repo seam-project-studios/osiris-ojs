@@ -67,7 +67,7 @@ ojsTemplate.prototype = {
     };
     const nl = () => {
       line++;
-      if (state === 'html') source.push('\n');
+      if (state !== 'js') source.push('\n');
     };
 
     while (cur < text.length) {
