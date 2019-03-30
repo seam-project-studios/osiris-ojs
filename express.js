@@ -8,7 +8,12 @@ const OjsExpress = function(req, res) {
 
   // exposed function
   this.header = (...args) => {
-    res.header(...args);
+    res.set(...args);
+    return '';
+  };
+
+  this.redirect = (...args) => {
+    res.redirect(...args);
     return '';
   };
 
