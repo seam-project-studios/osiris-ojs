@@ -11,6 +11,9 @@ module.exports.qMap = {
   "'": '&#39;',
 };
 
+// default template folders & functions, exposed for changes
+module.exports.templateMap = { snippet: 'snippets', element: 'elements' };
+
 // symbol map, for privatish object members
 const s = {
   writeStream: Symbol('writeStream'),
@@ -22,11 +25,20 @@ const s = {
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Osiris = function (writeStream) {
   this[s.writeStream] = writeStream;
-
-  // set up variables in "this" scope
-  this.locals = {}; // global scope for templates
   this[s.jsBundle] = [];
   this[s.cssBundle] = [];
+
+  // setup variables in "this" scope
+  this.locals = {}; // global scope for templates
+
+  // setup template functions from map
+  for (let funcName of Object.keys(module.exports.templateMap)) {
+    let folderName = module.exports.templateMap[funcName];
+    this[funcName] = async (filename, args) => {
+      await this[s.render](srcFolder + folderName + '/' + filename + '.ojs', args);
+      return '';
+    };
+  }
 };
 
 Osiris.prototype = {
@@ -60,20 +72,6 @@ Osiris.prototype = {
     });
 
     return doQ(str);
-  },
-
-  // osiris component layer
-
-  // render a snippet of html
-  snippet: async function (filename, args) {
-    await this[s.render](srcFolder + 'snippets/' + filename + '.ojs', args);
-    return '';
-  },
-
-  // html elements
-  element: async function (filename, args) {
-    await this[s.render](srcFolder + 'elements/' + filename + '.ojs', args);
-    return '';
   },
 
   // collection points for js and css
