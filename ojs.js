@@ -29,9 +29,9 @@ ojsTemplate.prototype = {
       if (typeof err === 'string') err = new Error(err);
       err.path = this.filename;
       if (err.stack) {
-        err.message = err.stack.replace(/^.+?ojs\.js.+?$\n?/gm, '') + '\n' + this.filename + ':' + lineno + '\n' + code;
+        err.message = err.stack.replace(/^.+?[\/\\]osiris-ojs[\/\\]ojs\.js.+?$\n?/gm, '') + '\n\n' + this.filename + ':' + lineno + '\n' + code;
       } else {
-        err.message = 'Error: ' + err.message + '\n' + this.filename + ':' + lineno + '\n' + code;
+        err.message = 'Error: ' + err.message + '\n\n' + this.filename + ':' + lineno + '\n' + code;
       }
 
       throw err;
