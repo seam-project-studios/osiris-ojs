@@ -62,7 +62,8 @@ const main = async () => {
     await osiris.render(res, './src/pages/' + filename + '.ojs', {
       express: ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent
       i18n: ojsi18n.locale(req.locale), // localization, assume en-GB for now; exposed: t(), d(), n(), locales, setLocale()
-      customFunc: () => 'customAnswer' // anything else we could possibly want, async/promises supported
+      customFunc: () => 'customAnswer', // anything else we could possibly want, async/promises supported
+      throwFunc: () => { throw new Error('thrown from dev.js'); }
     });
     // render complete, res.end() sent, clean up
   });

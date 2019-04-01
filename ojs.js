@@ -16,7 +16,7 @@ ojsTemplate.prototype = {
     let lines = text.split('\n');
 
     this.rethrow = (err, lineno) => {
-      let start = Math.max(lineno - 1, 0);
+      let start = Math.max(lineno - 2, 0);
       let end = Math.min(lines.length, lineno + 10);
 
       // Error context
@@ -27,11 +27,25 @@ ojsTemplate.prototype = {
 
       // Alter exception message
       if (typeof err === 'string') err = new Error(err);
+
       err.path = this.filename;
+
       if (err.stack) {
-        err.message = err.stack.replace(/^.+?[\/\\]osiris-ojs[\/\\]ojs\.js.+?$\n?/gm, '') + '\n\n' + this.filename + ':' + lineno + '\n' + code;
+        let stackLines = err.stack.split('\n');
+        let newStack = [];
+        for (let line of stackLines) {
+          if (line.match(/^\s*at (?:ojsTemplate\.)rethrow/)) {
+            newStack.push('    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code);
+            break;
+          } else if (line.match(/^\s*at Object.eval \(eval at render /)) {
+            newStack.push('    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code);
+            break;
+          }
+          newStack.push(line);
+        }
+        err.message = newStack.join('\n');
       } else {
-        err.message = 'Error: ' + err.message + '\n\n' + this.filename + ':' + lineno + '\n' + code;
+        err.message = 'Error: ' + err.message + '\n    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code;
       }
 
       throw err;
@@ -183,11 +197,11 @@ ojsTemplate.prototype = {
     this.source = source.join('');
 
     // use syntax-error to check the compiled source code
-    let syntaxError = check('(async function () { ' + this.source + ' })();', this.filename);
+    let syntaxError = check('(async function () {' + this.source + '})();', this.filename);
     if (syntaxError) this.rethrow(syntaxError, syntaxError.line);
 
     // wrap our source in a try catch with using our rethrower function
-    this.source = `let __line = 1; try { ` + this.source + ` } catch (e) { rethrow(e, __line); }`;
+    this.source = 'let __line = 0; try {' + this.source + '} catch (e) {rethrow(e, __line);}';
   },
   render: async function (context) {
     // setup context scopes for templates

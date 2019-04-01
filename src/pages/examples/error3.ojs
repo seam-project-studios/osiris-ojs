@@ -1,0 +1,10 @@
+<?=snippet('header', {title: 'template error examples'}) ?>
+
+<p>Error testing</p>
+
+<?
+/* comment
+here */
+?>
+<?=throwFunc() ?>
+<?=snippet('footer') ?>
