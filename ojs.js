@@ -28,7 +28,11 @@ ojsTemplate.prototype = {
       // Alter exception message
       if (typeof err === 'string') err = new Error(err);
       err.path = this.filename;
-      err.message = (this.filename + ':' + lineno + '\n' + code + '\n\nMessage: ' + err.message);
+      if (err.stack) {
+        err.message = err.stack.replace(/^.+?ojs\.js.+?$\n?/gm, '') + '\n' + this.filename + ':' + lineno + '\n' + code;
+      } else {
+        err.message = 'Error: ' + err.message + '\n' + this.filename + ':' + lineno + '\n' + code;
+      }
 
       throw err;
     }

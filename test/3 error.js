@@ -22,7 +22,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: Unexpected end of file');
+      expect(result).to.have.string('Error: Unexpected end of file');
       expect(result).to.have.string('error-eof-tag.ojs:2');
     });
   });
@@ -38,7 +38,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: Unexpected end of file');
+      expect(result).to.have.string('Error: Unexpected end of file');
       expect(result).to.have.string('error-eof-string.ojs:1');
     });
   });
@@ -54,7 +54,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: Unterminated string constant');
+      expect(result).to.have.string('Error: Unterminated string constant');
       expect(result).to.have.string('error-bad-string.ojs:1');
     });
   });
@@ -70,7 +70,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: undefined is not a function');
+      expect(result).to.have.string('TypeError: undefined is not a function');
       expect(result).to.have.string('error-undefined.ojs:1');
     });
   });
@@ -86,7 +86,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: myValue is not defined');
+      expect(result).to.have.string('ReferenceError: myValue is not defined');
       expect(result).to.have.string('context-var.ojs:1');
     });
   });
@@ -102,7 +102,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: myFunction is not defined');
+      expect(result).to.have.string('ReferenceError: myFunction is not defined');
       expect(result).to.have.string('context-func.ojs:1');
     });
   });
@@ -136,7 +136,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: Unexpected token');
+      expect(result).to.have.string('Error: Unexpected token');
       expect(result).to.have.string('error-syntax.ojs:2');
     });
   });
@@ -152,7 +152,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: from template');
+      expect(result).to.have.string('Error: from template');
       expect(result).to.have.string('error-throw.ojs:1'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
     });
   });
@@ -172,7 +172,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: from context');
+      expect(result).to.have.string('Error: from context');
       expect(result).to.have.string('context-func.ojs:1');
     });
   });
@@ -188,7 +188,7 @@ describe('OJS error tests', () => {
     });
 
     it('Should indicate error, file and line', () => {
-      expect(result).to.have.string('Message: error is not defined');
+      expect(result).to.have.string('ReferenceError: error is not defined');
       expect(result).to.have.string('error-line-20.ojs:16'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
     });
   });});
