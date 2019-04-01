@@ -31,13 +31,9 @@ ojsTemplate.prototype = {
       err.path = this.filename;
 
       if (err.stack) {
-        let stackLines = err.stack.split('\n');
-        let newStack = [];
+        let stackLines = err.stack.split('\n'), newStack = [];
         for (let line of stackLines) {
-          if (line.match(/^\s*at (?:ojsTemplate\.)rethrow/)) {
-            newStack.push('    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code);
-            break;
-          } else if (line.match(/^\s*at Object.eval \(eval at render /)) {
+          if (line.match(/^(?:\s*at (?:ojsTemplate\.)?rethrow|\s*at Object.eval \(eval at render )/)) {
             newStack.push('    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code);
             break;
           }
