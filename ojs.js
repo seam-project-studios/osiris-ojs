@@ -232,10 +232,11 @@ module.exports = {
     }
 
     // setup stream handling
-    let streamOpen = true;
     if (!writeStream.__osirisHooked) {
       writeStream.__osirisHooked = true;
-      const onClose = () => { streamOpen = false; if (context.onClose) context.onClose.apply(context); };
+      const onClose = () => {
+        if (context.onClose) context.onClose.apply(context);
+      };
       writeStream.on('close', onClose); // close is needed for sockets
       writeStream.on('end', onClose); // end is needed for stream buffers
     }
