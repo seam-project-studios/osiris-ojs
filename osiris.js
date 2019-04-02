@@ -12,57 +12,67 @@ module.exports.qMap = {
 };
 
 // default template folders & functions, exposed for changes
-module.exports.templateMap = { snippet: 'snippets', element: 'elements' };
+module.exports.templateMap = {
+  snippet: 'snippets',
+  element: 'elements'
+};
 
 // symbol map, for privatish object members
 const s = {
-  writeStream: Symbol('writeStream'),
-  render: Symbol('render'),
   jsBundle: Symbol('jsBundle'),
   cssBundle: Symbol('cssBundle')
 };
 
+let mode = 'development';
+Object.defineProperty(module.exports, 'mode', {
+  get () {
+    return mode;
+  },
+  set (val) {
+    if (val !== 'development' && val !== 'production') {
+      throw new Error('osiris.mode can only be set to development or production');
+    }
+    ojs.mode = mode = val;
+  },
+  enumerable: true,
+  configurable: false
+});
+
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Osiris = function (writeStream) {
-  this[s.writeStream] = writeStream;
   this[s.jsBundle] = [];
   this[s.cssBundle] = [];
 
   // setup variables in "this" scope
   this.locals = {}; // global scope for templates
 
+  // our render function, ojs needs a filename and an object representing local scope
+  const render = async (filename, args = {}) => {
+    // copy args to scope and preserve previous scopes args
+    const previousArgs = this.args;
+    this.args = args;
+    await ojs.renderFile(writeStream, filename, this);
+    this.args = previousArgs;
+  };
+
+  // call this to render a file
+  this.render = async (filename) => {
+    delete this.render; // run once
+    await render(filename, {}); // render with empty args
+    writeStream.end(); // we're done
+  };
+
   // setup template functions from map
   for (let funcName of Object.keys(module.exports.templateMap)) {
     let folderName = module.exports.templateMap[funcName];
     this[funcName] = async (filename, args) => {
-      await this[s.render](srcFolder + folderName + '/' + filename + '.ojs', args);
+      await render(srcFolder + folderName + '/' + filename + '.ojs', args);
       return '';
     };
   }
 };
 
 Osiris.prototype = {
-  // call this to render a file
-  render: async function (filename) {
-    delete this.render; // run once
-    await this[s.render](filename, {}); // render with empty args
-    this[s.writeStream].end(); // we're done
-  },
-
-  // our render function, ojs needs a filename and an object representing local scope
-  [s.render]: async function (filename, args = {}) {
-    // copy args to scope and preserve previous scopes args
-    const previousArgs = this.args;
-    this.args = args;
-    await ojs.renderFile(this[s.writeStream], filename, this);
-    this.args = previousArgs;
-  },
-
-  // callback incase we need to do any clean up if the user quits half way through a render
-  //onClose: function () {
-  //  console.log('User closed stream!');
-  //},
-
   // quote a function according to exports.qMap, return a promise if given a promise
   q: (str='') => {
     const doQ = (str) => str.split('').map(c => module.exports.qMap[c] || c).join('');

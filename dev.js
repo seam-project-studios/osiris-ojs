@@ -18,6 +18,7 @@ const main = async () => {
 
   // our render engine
   const osiris = require('./osiris');
+  // osiris.mode = 'production';
 
   // our template addons
   const ojsExpress = require('./express');
