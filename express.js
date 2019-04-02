@@ -31,4 +31,4 @@ const OjsExpress = function(req, res) {
   });
 };
 
-module.exports = (...args) => new OjsExpress(...args);
+module.exports = (req, res) => new OjsExpress(req, res);
