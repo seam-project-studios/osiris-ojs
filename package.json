@@ -6,7 +6,7 @@
   "main": "osiris.js",
   "description": "",
   "scripts": {
-    "dev": "nodemon dev.js --ignore template",
+    "dev": "nodemon dev.js --ignore src",
     "static": "nodemon static.js",
     "build": "node build.js",
     "test": "mocha"

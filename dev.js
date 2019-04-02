@@ -23,6 +23,7 @@ const main = async () => {
   // our template addons
   const ojsExpress = require('./express');
   const ojsi18n = await require('./i18n')();
+  ojsi18n.watch(); // watch localeFolder for changes
 
   app.use(express.static('src/pages/')); // serve pages folder
 
