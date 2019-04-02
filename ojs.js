@@ -81,8 +81,8 @@ ojsTemplate.prototype = {
     let cacheHit = module.exports.cache.get(this.filename);
     if (cacheHit) {
       this.source = cacheHit.source;
-      this.fn = cacheHit.fn;
       this.lines = cacheHit.lines;
+      this.fn = cacheHit.fn;
       return;
     }
 
@@ -246,9 +246,8 @@ ojsTemplate.prototype = {
     // create our function using the constructor, taking our __args
     this.fn = new AsyncFunction('__args', this.source);
 
-
     // save to cache
-    module.exports.cache.set(this.filename, { source: this.source, fn: this.fn, lines: this.lines });
+    module.exports.cache.set(this.filename, { source: this.source, lines: this.lines, fn: this.fn });
   },
 
   render: async function (context) {
