@@ -5,11 +5,9 @@ const check = require('syntax-error');
 const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
 
 // overridable caching object
-let mode = 'development';
 module.exports.cache = {
   _data: {},
   set: function (key, val) {
-    if (mode === 'development') return; // disable caching in dev mode
     this._data[key] = val;
   },
   get: function (key) {
@@ -22,21 +20,6 @@ module.exports.cache = {
     this._data = {};
   }
 };
-
-Object.defineProperty(module.exports, 'mode', {
-  get () {
-    return mode;
-  },
-  set (val) {
-    if (val !== 'development' && val !== 'production') {
-      throw new Error('ojs.mode can only be set to development or production');
-    }
-    mode = val;
-    if (mode === 'development') module.exports.cache.reset();
-  },
-  enumerable: true,
-  configurable: false
-});
 
 const ojsTemplate = function (filename) {
   this.filename = filename;
@@ -264,29 +247,30 @@ ojsTemplate.prototype = {
 };
 
 module.exports.renderFile = async (writeStream, filename, context) => {
-  if (!writeStream.on || !writeStream.write) {
-    throw new Error('ojs.renderFile(writeStream, filename, context): expects first argument to be a writable stream');
-  }
-  if (await fs.exists(filename) === false) {
-    throw new Error('ojs.renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
-  }
   if (typeof context !== 'object') {
     throw new Error('ojs.renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
   }
+  if (!writeStream.on || !writeStream.write) {
+    throw new Error('ojs.renderFile(writeStream, filename, context): expects first argument to be a writable stream');
+  }
 
   // setup stream handling
+  const onClose = context.onClose ? context.onClose.bind(context) : () => { };
+  const onError = context.onError ? context.onError.bind(context) : (e) => { throw new Error(e); writeStream.end(); };
   if (!writeStream.__osirisHooked) {
     writeStream.__osirisHooked = true;
-    const onClose = () => {
-      if (context.onClose) context.onClose.apply(context);
-    };
     writeStream.on('close', onClose); // close is needed for sockets
     writeStream.on('end', onClose); // end is needed for stream buffers
+  }
+
+  if (await fs.exists(filename) === false) {
+    onError('ojs.renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
   }
 
   const print = async (text) => {
     // write directly to stream, return/resolve an empty string
     text = await text;
+    if (typeof text === 'undefined') return '';
     text = text.toString();
     if (text.length === 0) return '';
 
@@ -307,15 +291,11 @@ module.exports.renderFile = async (writeStream, filename, context) => {
 
   context.print = print.bind(context); // inject print function into context
 
-  let template = new ojsTemplate(filename);
+  const template = new ojsTemplate(filename);
   try {
     await template.compile();
     await template.render(context);
   } catch (e) {
-    if (mode === 'development') {
-      context.print('<pre>' + e.message.replace(/</g, '&lt;') + '</pre>');
-      return;
-    }
-    throw new Error(e.message);
+    onError(e.message);
   }
 };

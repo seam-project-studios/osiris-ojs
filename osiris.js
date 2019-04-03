@@ -1,4 +1,4 @@
-const srcFolder = process.cwd() + '/src/'; // we will look for snippets/ and components/ here
+const srcFolder = process.cwd() + '/src/'; // we will look for templateMap folders here
 
 const ojs = require('./ojs');
 
@@ -32,11 +32,30 @@ Object.defineProperty(module.exports, 'mode', {
     if (val !== 'development' && val !== 'production') {
       throw new Error('osiris.mode can only be set to development or production');
     }
-    ojs.mode = mode = val;
+    mode = val;
+    if (mode === 'development') ojs.cache.reset();
   },
   enumerable: true,
   configurable: false
 });
+
+// override ojs cache
+ojs.cache = {
+  _data: {},
+  set: function (key, val) {
+    if (mode === 'development') return; // disable caching in dev mode
+    this._data[key] = val;
+  },
+  get: function (key) {
+    return this._data[key];
+  },
+  remove: function (key) {
+    delete this._data[key];
+  },
+  reset: function () {
+    this._data = {};
+  }
+};
 
 // return a constructor to hold all the variables for a single page render, takes a writableStream
 const Osiris = function (writeStream) {
@@ -60,6 +79,19 @@ const Osiris = function (writeStream) {
     delete this.render; // run once
     await render(filename, {}); // render with empty args
     writeStream.end(); // we're done
+  };
+
+  this.onClose = () => {
+    // user closed before template finished
+  };
+
+  this.onError = async (message) => {
+    if (mode === 'development') {
+      await this.print('<pre>' + this.q(message) + '</pre>');
+    } else {
+      throw message;
+    }
+    writeStream.end(); // we've failed
   };
 
   // setup template functions from map
@@ -104,7 +136,6 @@ Osiris.prototype = {
 
 const copyScopes = (obj, scopes) => {
   for (let copy of scopes) for (let i of Object.keys(copy)) {
-    if (typeof obj[i] !== 'undefined') continue; // copy but don't overwrite scope to this
     Object.defineProperty(obj, i, Object.getOwnPropertyDescriptor(copy, i));
   }
 };
