@@ -37,10 +37,9 @@ await myFunction(); // we can await our own functions too
 Designed to facility code re-use and organisation of files, Osiris and its modules are all built with asynchronicity in mind to allows IO requests to not bottleneck the system.
 
 Files are organised into your projects `./src/` with the following folders:
-- `elements/`, calls to `element()` are resolved here
-- `snippets/`, calls to `snippet()` are resolved here
 - `locales/`, for i18n support
 - `pages/`, the web root, landing page templates go here
+- osiris.templateMap folders resolve here, defaults are `snippets/` and `elements/`
 
 Please check out our examples:
 - [Using express](https://github.com/seam-project-studios/osiris-ojs/blob/master/dev.js)
@@ -51,6 +50,11 @@ Please check out our examples:
 ```javascript
 const fs = require('fs');
 const osiris = require('osiris-ojs');
+osiris.mode = 'development'; // or 'production'
+osiris.templateMap = { // default settings, included for completeness
+  snippet: 'snippets',
+  elements: 'elements'
+};
 
 // we can inject things into scope to be used by all renderings
 osiris.use({
@@ -70,17 +74,20 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 ---
 
 ## Osiris API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
+Osiris features the following configuration via the osiris object
+- `mode = 'development' or 'production'`, default development, development disabled ojs template caching and directs errors to the web browser.
+- `qMap = Object`, character mapping to html entities, used by q()
+- `templateMap = Object`, key/value pairs, key represent the name of the function added to the template scope and the value represents the path within ./src/
+
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
 - `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
-- `snippet: async (filename, args)`, renders filename found in src/snippets/`filename`.ojs with the arguments provided as `args` to the template
-- `element: async (filename, args)`, renders filename found in src/elements/`filename`.ojs with the arguments provided as `args` to the template
 - `js: (str)`, bundles collections of Javascript for footer insertion
 - `css: (str)`, bundles collections of CSS for footer insertion
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
 - `locals`, a persistant object that allows for a global namespace between template calls
-- `onClose: callback`, bind a function to this hook to be called when the connection is lost mid-template
-
+- `onClose: callback`, bind a function to this hook to be called when the connection is lost mid-template.  Also available in ojs
+- `onError: callback(errorText)`, bind a function to handle errors.  Also available in ojs
 ---
 
 ## Osiris express [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
@@ -114,7 +121,7 @@ const main = async () => {
       ojsExpress(req, res), // this gives templates access to get, post, header() and headersSent, cookie and setCookie()
       express: ojsExpress(req, res) // we can also do this if we want to put all of that in scope of an express object instead of top level
     });
-    // render complete, res.end() sent, clean up
+    // render complete, res.end() sent, perform any required clean up
   });
   await app.listen(HTTP_PORT);
   console.log('Node process listening on ' + HTTP_PORT);
@@ -125,8 +132,9 @@ main();
 ## Osiris express template API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
 - `get`, object containing get variables, parsed by `url.parse`
 - `post`, object containing post variables, taken from `req.body`
-- `header: (...args)`, calls `res.header`
+- `header: (...args)`, calls `res.set`
 - `headersSent`, boolean if headers have been sent yet
+- `redirect: (...args)`, calls `res.redirect`
 - `cookie`, object containing cookie variables, taken from `req.cookies`
 - `setCookie: (...args)`, calls `res.cookie`
 
@@ -152,6 +160,7 @@ More complete examples:
 ## Osiris i18n nodeJS API
 - `locales`, array of strings of locales available
 - `locale: (localeString)`, returns template API for `localeString`
+- `watch()`, call to let i18n reload when locale files change
 
 ## Osiris i18n template API
 - `locale`, string of current locale

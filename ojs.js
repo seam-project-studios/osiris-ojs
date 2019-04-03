@@ -269,10 +269,11 @@ module.exports.renderFile = async (writeStream, filename, context) => {
 
   const print = async (text) => {
     // write directly to stream, return/resolve an empty string
-    text = await text;
     if (typeof text === 'undefined') return '';
-    text = text.toString();
-    if (text.length === 0) return '';
+
+    text = await text; // resolve support promises
+    text = text.toString(); // stringify anything not a string
+    if (text.length === 0) return ''; // nothing to write
 
     return new Promise((res, rej) => {
       const resolve = () => res('');
@@ -284,7 +285,7 @@ module.exports.renderFile = async (writeStream, filename, context) => {
           process.nextTick(resolve); // resolve on next tick, allow other requests to finish
         }
       } catch (e) {
-        resolve(); // silence write errors
+        process.nextTick(resolve); // silence write errors
       }
     });
   };
