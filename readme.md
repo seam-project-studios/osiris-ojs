@@ -1,9 +1,9 @@
 # Osiris and OJS
 
 ## OJS is an asynchronous Javascript template engine [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/ojs.js)
-Designed to build static sites or be used with express using simple template syntax that supports native JS within templates. Written from the ground up to achieve full async/await abilities.
+Designed to build static sites or be used with express using simple template syntax that supports native JS within templates. Written from the ground up to achieve full [async/await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) abilities.
 
-OJS only provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. This allows for low memory and cpu usage and high throughput from a single thread.
+OJS provides a `print` function and it must be called with `await` as the writableStream may have closed or be buffering. This allows for low memory and cpu usage and high throughput from a single thread.
 
 ## Installation
 `npm i --save osiris-ojs`
@@ -12,16 +12,19 @@ OJS only provides a `print` function and it must be called with `await` as the w
 ```javascript
 <?
 // we start our javascript content with <? and end it with ?>
-// we can use <?= ?> to print a statement
+// we can use <?='hi' ?> to print any statement, this will automatically be awaited
+
+let myWelcome = 'Hi from Javascript!';
+
 // anything javascript goes, here's a test function
 const myFunction = async () => { // async lets us await
-  await print('<p>Hi from myFunction</p>'); // print is the only function available with OJS without Osiris
+  await print('<p>Hi from myFunction</p>'); // we must await our prints
 };
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title><?='Hi from Javascript!' ?></title>
+  <title><?=myWelcome ?></title>
 </head>
 <body>
 <?
@@ -29,6 +32,7 @@ await print('<p>We must await our print statements</p>');
 await print('<p>Everything is asynchronous here</p>');
 await myFunction(); // we can await our own functions too
 ?>
+<?=myFunction(); /* short tags automatically await function calls and skip anything not printable (like undefined) */ ?>
 </body>
 </html>
 ```
@@ -63,7 +67,7 @@ osiris.use({
   }
 });
 
-let writeFile = fs.createWriteStream('myBuilt.html');
+let writeFile = fs.createWriteStream('myBuilt.html'); // open a file to put the result in
 await osiris.render(writeFile, 'myToBuild.ojs', {
   myLocalFunction: async () => { // we can inject things just for this rendering
     await this.print('Hi from myLocalFunction');
