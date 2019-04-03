@@ -90,8 +90,8 @@ Osiris exposes the following functions to the templates, as well as the default 
 - `bundleJs`, retrieves the JS bundle for output
 - `bundleCss`, retrieves the CSS bundle for output
 - `locals`, a persistant object that allows for a global namespace between template calls
-- `onClose = function`, bind a function to this hook to be called when the connection is lost mid-template.  Also available in ojs
-- `onError = function (errorText)`, bind a function to handle errors.  Also available in ojs
+- `onClose = function`, bind a function to this hook to be called when the connection is lost mid-template.  Also available in OJS
+- `onError = function (errorText)`, bind a function to handle errors.  Also available in OJS, [default](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js#L88)
 ---
 
 ## Osiris express [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/express.js)
