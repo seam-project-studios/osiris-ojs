@@ -57,7 +57,7 @@ const osiris = require('osiris-ojs');
 osiris.mode = 'development'; // or 'production'
 osiris.templateMap = { // default settings, included for completeness
   snippet: 'snippets',
-  elements: 'elements'
+  element: 'elements'
 };
 
 // we can inject things into scope to be used by all renderings
