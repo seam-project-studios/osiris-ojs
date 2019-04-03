@@ -79,8 +79,8 @@ await osiris.render(writeFile, 'myToBuild.ojs', {
 
 ## Osiris API [src](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js)
 Osiris features the following configuration via the osiris object
-- `mode = 'development' or 'production'`, default development, development disabled ojs template caching and directs errors to the web browser.
-- `qMap = Object`, character mapping to html entities, used by q()
+- `mode = 'development' or 'production'`, default development, development disables ojs caching and directs errors to the web browser.
+- `qMap = Object`, character mapping to html entities, used by q(), default translates <, >, ', " and &
 - `templateMap = Object`, key/value pairs, key represent the name of the function added to the template scope and the value represents the path within ./src/
 
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
