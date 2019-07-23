@@ -122,7 +122,7 @@ Osiris.prototype = {
     return '';
   },
   bundleJs: function () {
-    return this[s.jsBundle].join("\n");
+    return this[s.jsBundle].join('\n');
   },
 
   css: function (str) {
@@ -130,7 +130,7 @@ Osiris.prototype = {
     return '';
   },
   bundleCss: function () {
-    return this[s.cssBundle].join("\n");
+    return this[s.cssBundle].join('\n');
   },
 };
 

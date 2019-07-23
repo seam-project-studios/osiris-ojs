@@ -84,7 +84,7 @@ Osiris features the following configuration via the osiris object
 - `templateMap = Object`, key/value pairs, key represent the name of the function added to the template scope and the value represents the path within `./src/` [default](https://github.com/seam-project-studios/osiris-ojs/blob/master/osiris.js#L15)
 
 Osiris exposes the following functions to the templates, as well as the default `print()` provided by OJS
-- `q: async? (str='')`, translates a strings HTML entities so it can be used within quoted attributes, returns a promise if given a promise
+- `q: async? (str='')`, translates a strings HTML entities with `qMap` so it can be used within quoted attributes, returns a promise if given a promise
 - `js: (str)`, bundles collections of Javascript for footer insertion
 - `css: (str)`, bundles collections of CSS for footer insertion
 - `bundleJs`, retrieves the JS bundle for output

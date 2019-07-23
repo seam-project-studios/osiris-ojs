@@ -224,7 +224,7 @@ ojsTemplate.prototype = {
     if (syntaxError) this.rethrow(syntaxError, syntaxError.line);
 
     // wrap our source in a try catch with using our rethrower function
-    this.source = ' let __line = 0; with(__args) { try {' + this.source + '} catch (e) {__rethrow(e, __line);} }';
+    this.source = 'let __line = 0; with(__args) { try {' + this.source + '} catch (e) {__rethrow(e, __line);} }';
 
     // create our function using the constructor, taking our __args
     this.fn = new AsyncFunction('__args', this.source);
@@ -271,7 +271,7 @@ module.exports.renderFile = async (writeStream, filename, context) => {
     // write directly to stream, return/resolve an empty string
     if (typeof text === 'undefined') return '';
 
-    text = await text; // resolve support promises
+    text = await text; // resolve promises
     text = text.toString(); // stringify anything not a string
     if (text.length === 0) return ''; // nothing to write
 

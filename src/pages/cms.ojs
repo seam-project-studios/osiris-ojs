@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><?='Osiris CMS' ?></title>
+    <style>
+label {
+  float: left;
+}
+    </style>
+  </head>
+  <body>
+    <h1><?=cms.heading ?></h1>
+    <h2><?=cms.description ?></h2>
+<?
+if (cms.links) {
+?>
+  <ul>
+<?
+  for (label of Object.keys(cms.links)) {
+?>
+    <li><a href="<?=cms.links[label] ?>"><?=label ?></a></li>
+<?
+  }
+?>
+  </ul>
+<?
+}
+
+if (cms.fields) {
+?>
+  <form method="post">
+<?
+  for (field of cms.fields) {
+    await element(field.element, {
+      name: field.i18n,
+      value: ojsi18n.locale('en-GB').t(field.i18n),
+      ...field.args
+    });
+  }
+?>
+    <button type="submit">Save</button>
+  </form>
+<?
+}
+?>
+    <style><?=bundleCss() ?></style>
+    <script><?=bundleJs() ?></script>
+  </body>
+</html>

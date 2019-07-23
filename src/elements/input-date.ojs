@@ -1,0 +1,54 @@
+<?
+// arg check
+if (!args.name) {
+  return yield print('input.ojs: Error: Expected name argument');
+}
+
+// utility functions
+const showAttrs = async (attrs, value) => {
+  let r = [];
+  for (let attr of attrs) {
+    if (typeof args[attr] === 'undefined') continue;
+    if (typeof args[attr] === 'number') {
+      // don't try to q() numbers
+      r.push(attr + "=\"" + args[attr] + "\"");
+    } else {
+      r.push(attr + "=\"" + await q(args[attr]) + "\"");
+    }
+  }
+  return ' ' + r.join(' ');
+};
+
+const showTruthyAttrs = async(attrs) => {
+  let r = [];
+  for (let attr of attrs) {
+    if (args[attr]) r.push(attr);
+  }
+  return ' ' + r.join(' ');
+};
+
+const showClass = () => {
+  if (!args.class) return "";
+  if (Array.isArray(args.class)) return ' ' + args.class.join(" ");
+  return ' ' + args.class;
+};
+?>
+
+<div class="input-group<?=showClass() ?>">
+  <input
+    type="date"
+    <?=showAttrs(['id', 'name', 'title', 'value', 'min', 'max']) ?>
+    <?=showTruthyAttrs(['required', 'disabled']) ?>
+  />
+  <label>
+    <?= args.label ?>
+  </label>
+</div>
+<div class="help-error"><?=q(args.validationError) ?></div>
+<?
+if (args.requiredError) {
+?>
+<div class="required-error"><?=q(args.requiredError) ?></div>
+<?
+}
+?>

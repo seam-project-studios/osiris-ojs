@@ -1,0 +1,14 @@
+<?
+// arg check
+if (!args.type) {
+  return yield print('input-button.ojs: Error: Expected type argument');
+}
+
+const showClass = () => {
+  if (!args.class) return "";
+  if (Array.isArray(args.class)) return ' ' + args.class.join(" ");
+  return ' ' + args.class;
+};
+
+?>
+<input type="<?=args.type ?>" class="<?=showClass() ?>" value="<?=q(args.value) ?>" />

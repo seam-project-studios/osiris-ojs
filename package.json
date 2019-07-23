@@ -9,6 +9,7 @@
     "dev": "nodemon dev.js --ignore src",
     "static": "nodemon static.js",
     "build": "node build.js",
+    "cms": "nodemon osiris-cms.js --ignore src",
     "test": "mocha"
   },
   "dependencies": {

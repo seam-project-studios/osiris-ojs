@@ -1,0 +1,13 @@
+<?
+js = `
+if (what) {
+  $('.element').doStuff();
+}
+`;
+css = `
+.element {
+  font-weight: bold;
+}
+`;
+?>
+<p class="element"></p>
