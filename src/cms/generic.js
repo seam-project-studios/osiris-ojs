@@ -5,7 +5,8 @@ module.exports = new CMSPage({
   description: '',
   fields: [
     new CMSField({
-      i18n: 'test.welcome',
+      file: 'test',
+      path: 'welcome',
       element: 'input',
       args: {
         label: 'Welcome',

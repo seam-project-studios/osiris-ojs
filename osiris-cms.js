@@ -12,11 +12,13 @@ const CMSPage = function ({
 };
 
 CMSField = function ({
-  i18n = '',
+  file = '',
+  path = '',
   element = 'input',
   args = {}
 }) {
-  this.i18n = i18n;
+  this.file = file;
+  this.path = path;
   this.element = element;
   this.args = args;
 };
@@ -64,15 +66,27 @@ const main = async () => {
 
     res.header('content-type', 'text/html');
 
-    if (Object.keys(req.body) && cms.fields) {
+    if (Object.keys(req.body) && cms.fields.length) {
+      // potential something to save
+      let newData = {}; // [file][path] = value
       for (field of cms.fields) {
-        if (req.body[field.i18n]) {
-          console.log(field.i18n + ' = ' + req.body[field.i18n]);
+        let val = req.body[field.file + '#' + field.path];
+        if (typeof val !== 'undefined') {
+          if (!newData[field.file]) newData[field.file] = {};
+          newData[field.file][field.path] = val;
         }
+      }
+
+      // save
+      for (let file of Object.keys(newData)) {
+        let oldData = {};
+        if (await fs.exists('./src/locales/en-GB/' + file + '.json')) {
+          oldData = JSON.parse(await fs.readFile('./src/locales/en-GB/' + file + '.json'));
+        }
+        await fs.writeFile('./src/locales/en-GB/' + file + '.json', resolveData(oldData, newData[file]));
       }
     }
 
-    // call renderer with our addons, we can block here with await if we need any clean up after render
     let uid = 0;
     await osiris.render(res, './src/pages/cms.ojs', {
       cms,
@@ -80,7 +94,6 @@ const main = async () => {
       ojsi18n: ojsi18n,
       UID: () => ++uid,
     });
-    // render complete, res.end() sent, clean up
   });
 
   await app.listen(HTTP_PORT, () => {
@@ -88,3 +101,20 @@ const main = async () => {
   });
 };
 if (require.main === module) main();
+
+
+const resolveData = function(oldData, newData) {
+  let ret = oldData;
+  for (let key of Object.keys(newData)) {
+    let val = newData[key];
+    let p = key.split('.');
+    let ref = ret;
+    while (p.length > 1) {
+      let k = p.shift();
+      if (typeof ref[k] === 'undefined') ref[k] = {};
+      ref = ref[k];
+    }
+    ref[p[0]] = val;
+  }
+  return JSON.stringify(ret);
+};

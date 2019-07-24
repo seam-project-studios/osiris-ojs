@@ -26,14 +26,14 @@ if (cms.links) {
 <?
 }
 
-if (cms.fields) {
+if (cms.fields.length) {
 ?>
   <form method="post">
 <?
   for (field of cms.fields) {
     await element(field.element, {
-      name: field.i18n,
-      value: ojsi18n.locale('en-GB').t(field.i18n),
+      name: field.file + '#' + field.path,
+      value: ojsi18n.locale('en-GB').t(field.file.replace('/', '.') + '.' + field.path),
       ...field.args
     });
   }
