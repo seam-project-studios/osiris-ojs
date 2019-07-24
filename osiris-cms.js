@@ -83,7 +83,7 @@ const main = async () => {
         if (await fs.exists('./src/locales/en-GB/' + file + '.json')) {
           oldData = JSON.parse(await fs.readFile('./src/locales/en-GB/' + file + '.json'));
         }
-        await fs.writeFile('./src/locales/en-GB/' + file + '.json', resolveData(oldData, newData[file]));
+        await fs.writeFile('./src/locales/en-GB/' + file + '.json', JSON.stringify(resolveData(oldData, newData[file]), null, '  '));
       }
     }
 
@@ -116,5 +116,5 @@ const resolveData = function(oldData, newData) {
     }
     ref[p[0]] = val;
   }
-  return JSON.stringify(ret);
+  return ret;
 };
