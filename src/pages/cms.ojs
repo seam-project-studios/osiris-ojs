@@ -12,6 +12,12 @@ label {
     <h1><?=cms.heading ?></h1>
     <h2><?=cms.description ?></h2>
 <?
+if (saved) {
+?>
+    <p>Saved!</p>
+<?
+}
+
 if (cms.links) {
 ?>
   <ul>

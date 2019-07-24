@@ -66,6 +66,7 @@ const main = async () => {
 
     res.header('content-type', 'text/html');
 
+    let saved = false;
     if (Object.keys(req.body) && cms.fields.length) {
       // potential something to save
       let newData = {}; // [file][path] = value
@@ -79,6 +80,7 @@ const main = async () => {
 
       // save
       for (let file of Object.keys(newData)) {
+        saved = true;
         let oldData = {};
         if (await fs.exists('./src/locales/en-GB/' + file + '.json')) {
           oldData = JSON.parse(await fs.readFile('./src/locales/en-GB/' + file + '.json'));
@@ -89,7 +91,7 @@ const main = async () => {
 
     let uid = 0;
     await osiris.render(res, './src/pages/cms.ojs', {
-      cms,
+      cms, saved,
       express: ojsExpress(req, res),
       ojsi18n: ojsi18n,
       UID: () => ++uid,
@@ -102,19 +104,19 @@ const main = async () => {
 };
 if (require.main === module) main();
 
-
+// traverse the newDatas keys as dot paths and insert the value, return the new structure
 const resolveData = function(oldData, newData) {
-  let ret = oldData;
+  let ret = { ...oldData }; // copy
   for (let key of Object.keys(newData)) {
     let val = newData[key];
     let p = key.split('.');
     let ref = ret;
-    while (p.length > 1) {
+    while (p.length > 1) { // loop until last key
       let k = p.shift();
-      if (typeof ref[k] === 'undefined') ref[k] = {};
-      ref = ref[k];
+      if (typeof ref[k] === 'undefined') ref[k] = {}; // nothing there, create empty object
+      ref = ref[k]; // move our reference down the tree
     }
-    ref[p[0]] = val;
+    ref[p[0]] = val; // last key for the value
   }
   return ret;
 };
