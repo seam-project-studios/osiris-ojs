@@ -1,4 +1,4 @@
-<p>start other.ojs</p>
+<p>start other.atjs</p>
 <p>args = <?=q(JSON.stringify(args)) ?></p>
 <?
 // wait msec and resolve to msec
@@ -44,4 +44,4 @@ await wait(10); // be sure we are going to wait
 
 <?=snippet('scope-last') ?>
 
-<p>end other.ojs</p>
+<p>end other.atjs</p>

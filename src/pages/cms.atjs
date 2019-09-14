@@ -39,7 +39,7 @@ if (cms.fields.length) {
   for (field of cms.fields) {
     await element(field.element, {
       name: field.file + '#' + field.path,
-      value: ojsi18n.locale('en-GB').t(field.file.replace('/', '.') + '.' + field.path),
+      value: atjsi18n.locale('en-GB').t(field.file.replace('/', '.') + '.' + field.path),
       ...field.args
     });
   }

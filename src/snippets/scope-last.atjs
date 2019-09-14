@@ -1,5 +1,5 @@
-<p>start last.ojs</p>
+<p>start last.atjs</p>
 <p>Template in template test, scope test</p>
 <p>wait = <?=typeof wait ?></p>
 <p>locals.test = <?=JSON.stringify(locals.test) ?></p>
-<p>end last.ojs</p>
+<p>end last.atjs</p>

@@ -6,17 +6,17 @@ const expect = chai.expect;
 const streamBuffers = require('stream-buffers');
 
 // what we're testing
-const ojs = require('../ojs');
+const atjs = require('../atjs');
 
 describe('OJS specification tests', () => {
-  describe('ojs.renderFile', () => {
+  describe('atjs.renderFile', () => {
     it('Should be a function', () => {
-      expect(ojs.renderFile).to.be.a('function');
+      expect(atjs.renderFile).to.be.a('function');
     });
   });
 
-  describe('ojs.renderFile(writeStream, filename, context)', () => {
-    let output, context, caught, testFile = './test/templates/html-only.ojs';
+  describe('atjs.renderFile(writeStream, filename, context)', () => {
+    let output, context, caught, testFile = './test/templates/html-only.atjs';
 
     beforeEach(() => {
       output = new streamBuffers.WritableStreamBuffer();
@@ -25,7 +25,7 @@ describe('OJS specification tests', () => {
 
     it('Should error on bad writeStream', async () => {
       try {
-        await ojs.renderFile(null, testFile, context);
+        await atjs.renderFile(null, testFile, context);
       } catch (e) {
         caught = e;
       }
@@ -34,7 +34,7 @@ describe('OJS specification tests', () => {
 
     it('Should error on bad filename', async () => {
       try {
-        await ojs.renderFile(output, null, context);
+        await atjs.renderFile(output, null, context);
       } catch (e) {
         caught = e;
       }
@@ -43,7 +43,7 @@ describe('OJS specification tests', () => {
 
     it('Should error on bad context', async () => {
       try {
-        await ojs.renderFile(output, testFile, null);
+        await atjs.renderFile(output, testFile, null);
       } catch (e) {
         caught = e;
       }

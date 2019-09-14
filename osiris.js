@@ -1,6 +1,6 @@
 const srcFolder = process.cwd() + '/src/'; // we will look for templateMap folders here
 
-const ojs = require('./ojs');
+const atjs = require('./atjs');
 
 // html entity quote function, exposed for changes
 module.exports.qMap = {
@@ -33,14 +33,14 @@ Object.defineProperty(module.exports, 'mode', {
       throw new Error('osiris.mode can only be set to development or production');
     }
     mode = val;
-    if (mode === 'development') ojs.cache.reset();
+    if (mode === 'development') atjs.cache.reset();
   },
   enumerable: true,
   configurable: false
 });
 
-// override ojs cache
-ojs.cache = {
+// override atjs cache
+atjs.cache = {
   _data: {},
   set: function (key, val) {
     if (mode === 'development') return; // disable caching in dev mode
@@ -65,12 +65,12 @@ const Osiris = function (writeStream) {
   // setup variables in "this" scope
   this.locals = {}; // global scope for templates
 
-  // our render function, ojs needs a filename and an object representing local scope
+  // our render function, atjs needs a filename and an object representing local scope
   const render = async (filename, args = {}) => {
     // copy args to scope and preserve previous scopes args
     const previousArgs = this.args;
     this.args = args;
-    await ojs.renderFile(writeStream, filename, this);
+    await atjs.renderFile(writeStream, filename, this);
     this.args = previousArgs;
   };
 
@@ -98,7 +98,7 @@ const Osiris = function (writeStream) {
   for (let funcName of Object.keys(module.exports.templateMap)) {
     let folderName = module.exports.templateMap[funcName];
     this[funcName] = async (filename, args) => {
-      await render(srcFolder + folderName + '/' + filename + '.ojs', args);
+      await render(srcFolder + folderName + '/' + filename + '.atjs', args);
       return '';
     };
   }

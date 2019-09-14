@@ -1,6 +1,6 @@
 <?=snippet('header', {title: 'Scoping examples'}) ?>
 
-<p>start scope.ojs</p>
+<p>start scope.atjs</p>
 <?
 // Variable test
 locals.test = 'test123';
@@ -24,6 +24,6 @@ locals.test = 'test123';
   <li>args = <?=q(JSON.stringify(args)) ?></li>
   <li>customFunc = <?=customFunc() ?></li>
 </ol>
-<p>end scope.ojs</p>
+<p>end scope.atjs</p>
 
 <?=snippet('footer') ?>

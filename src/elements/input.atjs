@@ -1,6 +1,6 @@
 <?
 /*
-Consult input-date.ojs and input-button.ojs for respective usage
+Consult input-date.atjs and input-button.atjs for respective usage
 
 Usage: <?=element('input', { args }) ?>
 args is a key/value object representing the html attributes and extra functionality
@@ -28,10 +28,10 @@ element('input', {name: 'patternTest', type: 'text', validate: (value, object) =
 
 // arg check
 if (!args.type) {
-  return await print('input.ojs: Error: Expected type argument');
+  return await print('input.atjs: Error: Expected type argument');
 }
 
-if (typeof args.id === 'undefined') args.id = 'ojs' + UID(); // assign an ID if not exists
+if (typeof args.id === 'undefined') args.id = 'atjs' + UID(); // assign an ID if not exists
 
 // handle redirecting to other dedicated elements
 if (args.type === 'date') {
@@ -44,7 +44,7 @@ if (args.type === 'button' || args.type === 'submit') {
 
 // arg check
 if (!args.name) {
-  return await print('input.ojs: Error: Expected name argument');
+  return await print('input.atjs: Error: Expected name argument');
 }
 
 // utility functions

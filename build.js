@@ -27,7 +27,7 @@ const recurseFs = async (root, file, beforeFolder, afterFolder) => {
 
 const main = async () => {
   const osiris = require('./osiris'); // renderer
-  const ojsi18n = await require('./i18n')();
+  const atjsi18n = await require('./i18n')();
 
   osiris.use({
     customFunc: () => 'custom answer'
@@ -47,7 +47,7 @@ const main = async () => {
     (folder) => fs.rmdir(folder) // post folder
   );
 
-  console.log(ojsi18n.locales.length + ' locales detected:' + ojsi18n.locales.join(', '));
+  console.log(atjsi18n.locales.length + ' locales detected:' + atjsi18n.locales.join(', '));
 
   // break up the file name to insert the locale
   const makePath = (path, locale) => {
@@ -67,7 +67,7 @@ const main = async () => {
       // for each file in the templates folder
       const filename = file.substr(templateFolder.length);
 
-      const bar = new ProgressBar('[:bar] :filename - :task', { total: ojsi18n.locales.length + 2, width: 40 });
+      const bar = new ProgressBar('[:bar] :filename - :task', { total: atjsi18n.locales.length + 2, width: 40 });
 
       // extract file name information "name.ext"
       const doti = filename.lastIndexOf('.');
@@ -75,10 +75,10 @@ const main = async () => {
       const name = filename.substr(0,doti);
 
       bar.tick(1, {filename, task:'preparing to write'});
-      if (ext.toLowerCase() === 'ojs') {
+      if (ext.toLowerCase() === 'atjs') {
         // run the renderer, feeding the data into our files writeStream
 
-        for (let locale of ojsi18n.locales) {
+        for (let locale of atjsi18n.locales) {
           const buildFilename = buildFolder + makePath(name, locale);
           bar.tick(1, {filename, task:'building ' + buildFilename});
 
@@ -86,16 +86,16 @@ const main = async () => {
           let writeFile = fs.createWriteStream(buildFilename);
 
           await osiris.render(writeFile, file, {
-            i18n: ojsi18n.locale(locale),
+            i18n: atjsi18n.locale(locale),
             // expose a global link function for 118n support
             link: (path) => makePath(path == '/' ? '/index' : path, locale), // link to same locale
             linkLocale: (newLocale) => '/' + makePath(name, newLocale), // link to different locale
           });
         }
-        bar.tick(1, {filename, task:'built: ' + ojsi18n.locales.join(', ')});
+        bar.tick(1, {filename, task:'built: ' + atjsi18n.locales.join(', ')});
       } else {
         // basic file copy from template to build
-        bar.tick(ojsi18n.locales.length, {filename, task:'copying file'});
+        bar.tick(atjsi18n.locales.length, {filename, task:'copying file'});
         await fs.copyFile(file, buildFolder + filename);
         bar.tick(1, {filename, task:'copied'});
       }

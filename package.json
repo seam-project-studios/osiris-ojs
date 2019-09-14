@@ -1,6 +1,6 @@
 {
-  "name": "osiris-ojs",
-  "version": "2.0.11",
+  "name": "atjs",
+  "version": "1.0.0",
   "author": "SEAM PROJECT STUDIOS S,L",
   "license": "ISC",
   "main": "osiris.js",
@@ -39,6 +39,6 @@
       "build/",
       "_book/"
     ],
-    "ext": "js,json,ojs"
+    "ext": "js,json,atjs"
   }
 }

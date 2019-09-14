@@ -1,6 +1,6 @@
 {
   "root": "./docs",
-  "title": "EJS Static Site Docs",
+  "title": "atjs",
   "author": "max@seam.es",
   "language": "en",
   "plugins": [

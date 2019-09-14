@@ -21,7 +21,7 @@ module.exports.cache = {
   }
 };
 
-const ojsTemplate = function (filename) {
+const atjsTemplate = function (filename) {
   this.filename = filename;
   this.lines = [];
   this.source = '';
@@ -44,7 +44,7 @@ const ojsTemplate = function (filename) {
     if (err.stack) {
       let stackLines = err.stack.split('\n'), newStack = [];
       for (let line of stackLines) {
-        if (line.match(/^\s*at (?:(?:ojsTemplate\.)?rethrow|Object.eval \(eval at compile |Object.rethrow \[as __rethrow\])/)) {
+        if (line.match(/^\s*at (?:(?:atjsTemplate\.)?rethrow|Object.eval \(eval at compile |Object.rethrow \[as __rethrow\])/)) {
           newStack.push('    at OJS template (' + this.filename + ':' + lineno + ')\n\n' + code);
           break;
         }
@@ -59,7 +59,7 @@ const ojsTemplate = function (filename) {
   };
 };
 
-ojsTemplate.prototype = {
+atjsTemplate.prototype = {
   compile: async function () {
     let cacheHit = module.exports.cache.get(this.filename);
     if (cacheHit) {
@@ -248,10 +248,10 @@ ojsTemplate.prototype = {
 
 module.exports.renderFile = async (writeStream, filename, context) => {
   if (typeof context !== 'object') {
-    throw new Error('ojs.renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
+    throw new Error('atjs.renderFile(writeStream, filename, context): context must be an object, was given: ' + typeof context);
   }
   if (!writeStream.on || !writeStream.write) {
-    throw new Error('ojs.renderFile(writeStream, filename, context): expects first argument to be a writable stream');
+    throw new Error('atjs.renderFile(writeStream, filename, context): expects first argument to be a writable stream');
   }
 
   // setup stream handling
@@ -264,7 +264,7 @@ module.exports.renderFile = async (writeStream, filename, context) => {
   }
 
   if (await fs.exists(filename) === false) {
-    onError('ojs.renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
+    onError('atjs.renderFile(writeStream, filename, context): filename does not exist, was given: ' + filename);
   }
 
   const print = async (text) => {
@@ -292,7 +292,7 @@ module.exports.renderFile = async (writeStream, filename, context) => {
 
   context.print = print.bind(context); // inject print function into context
 
-  const template = new ojsTemplate(filename);
+  const template = new atjsTemplate(filename);
   try {
     await template.compile();
     await template.render(context);

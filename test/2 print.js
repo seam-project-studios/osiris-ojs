@@ -8,16 +8,16 @@ const fs = require('mz/fs'); // async fs
 const streamBuffers = require('stream-buffers'); // this will hold our template output instead of writing it to a file
 
 // what we're testing
-const ojs = require('../ojs');
+const atjs = require('../atjs');
 
-describe('OJS print tests', () => {
-  describe('render html-only.ojs', () => {
-    let output, context, result, testFile = './test/templates/html-only.ojs';
+describe('ATJS print tests', () => {
+  describe('render html-only.atjs', () => {
+    let output, context, result, testFile = './test/templates/html-only.atjs';
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = {};
-      await ojs.renderFile(output, testFile, context);
+      await atjs.renderFile(output, testFile, context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -25,19 +25,19 @@ describe('OJS print tests', () => {
       expect(context.print).to.be.a('function');
     });
 
-    it('Should equal html-only.ojs', async () => {
+    it('Should equal html-only.atjs', async () => {
       let original = (await fs.readFile(testFile)).toString();
       expect(result).to.equal(original);
     });
   });
 
-  describe('render print-tag.ojs', () => {
+  describe('render print-tag.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = {};
-      await ojs.renderFile(output, './test/templates/print-tag.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-tag.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -46,13 +46,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-func.ojs', () => {
+  describe('render print-func.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = {};
-      await ojs.renderFile(output, './test/templates/print-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-func.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -61,7 +61,7 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render context-var.ojs', () => {
+  describe('render context-var.atjs', () => {
     let output, context, result, getter;
 
     beforeEach(async () => {
@@ -69,7 +69,7 @@ describe('OJS print tests', () => {
       context = { myValue: '' };
       getter = () => 'test';
       sinon.stub(context, 'myValue').get(getter);
-      await ojs.renderFile(output, './test/templates/context-var.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-var.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -81,7 +81,7 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render context-func.ojs', () => {
+  describe('render context-func.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
@@ -89,7 +89,7 @@ describe('OJS print tests', () => {
       context = {
         myFunction: sinon.fake.returns('test')
       };
-      await ojs.renderFile(output, './test/templates/context-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-func.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -102,7 +102,7 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render context-func.ojs (async)', () => {
+  describe('render context-func.atjs (async)', () => {
     let output, context, result;
 
     beforeEach(async () => {
@@ -110,7 +110,7 @@ describe('OJS print tests', () => {
       context = {
         myFunction: sinon.fake.resolves('test')
       };
-      await ojs.renderFile(output, './test/templates/context-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-func.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -123,7 +123,7 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render context-func.ojs (connection terminated)', () => {
+  describe('render context-func.atjs (connection terminated)', () => {
     let output, context, result;
 
     beforeEach(async () => {
@@ -134,7 +134,7 @@ describe('OJS print tests', () => {
         },
         onClose: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/context-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-func.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -149,13 +149,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-squote.ojs', () => {
+  describe('render print-squote.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-squote.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-squote.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -164,13 +164,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-dquote.ojs', () => {
+  describe('render print-dquote.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-dquote.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-dquote.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -179,13 +179,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-backtick.ojs', () => {
+  describe('render print-backtick.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-backtick.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-backtick.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -194,13 +194,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-complex-quote.ojs', () => {
+  describe('render print-complex-quote.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-complex-quote.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-complex-quote.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -209,13 +209,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-state-switch.ojs', () => {
+  describe('render print-state-switch.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-state-switch.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-state-switch.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -239,13 +239,13 @@ describe('OJS print tests', () => {
     });
   });
 
-  describe('render print-json.ojs', () => {
+  describe('render print-json.atjs', () => {
     let output, context, result;
 
     beforeEach(async () => {
       output = new streamBuffers.WritableStreamBuffer();
       context = { };
-      await ojs.renderFile(output, './test/templates/print-json.ojs', context);
+      await atjs.renderFile(output, './test/templates/print-json.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 

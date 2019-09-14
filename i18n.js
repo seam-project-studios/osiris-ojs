@@ -42,7 +42,7 @@ const addNode = (data, path, ext) => {
 const loadLocales = () => {
   return new Promise(async (res, rej) => {
     if (await fs.exists(localesFolder) === false) {
-      throw new Error('ojs.i18n could not find locales folder at ' + localesFolder);
+      throw new Error('atjs.i18n could not find locales folder at ' + localesFolder);
     }
 
     let data = {}

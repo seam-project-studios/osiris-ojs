@@ -48,9 +48,9 @@ const main = async () => {
   osiris.mode = 'development';
 
   // our template addons
-  const ojsExpress = require('./express');
-  const ojsi18n = await require('./i18n')();
-  ojsi18n.watch(); // watch localeFolder for changes
+  const atjsExpress = require('./express');
+  const atjsi18n = await require('./i18n')();
+  atjsi18n.watch(); // watch localeFolder for changes
 
   app.use(async (req, res, next) => {
     let filename = req.path.substr(1); // trim starting /
@@ -90,10 +90,10 @@ const main = async () => {
     }
 
     let uid = 0;
-    await osiris.render(res, './src/pages/cms.ojs', {
+    await osiris.render(res, './src/pages/cms.atjs', {
       cms, saved,
-      express: ojsExpress(req, res),
-      ojsi18n: ojsi18n,
+      express: atjsExpress(req, res),
+      atjsi18n: atjsi18n,
       UID: () => ++uid,
     });
   });

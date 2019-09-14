@@ -1,6 +1,6 @@
 const url = require('url'); // parse query strings
 
-const OjsExpress = function(req, res) {
+const AtjsExpress = function(req, res) {
   // private variables
   const getVars = url.parse(req.url, true).query;
   const postVars = req.body || {};
@@ -31,4 +31,4 @@ const OjsExpress = function(req, res) {
   });
 };
 
-module.exports = (req, res) => new OjsExpress(req, res);
+module.exports = (req, res) => new AtjsExpress(req, res);

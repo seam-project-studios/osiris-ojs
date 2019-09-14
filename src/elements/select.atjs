@@ -1,8 +1,13 @@
 <?
 // arg check
 if (!args.name) {
-  return yield print('input.ojs: Error: Expected name argument');
+  return yield print('input.atjs: Error: Expected name argument');
 }
+
+if (!args.options) {
+  return yield print('input.atjs: Error: Expected options argument');
+}
+
 
 // utility functions
 const showAttrs = async (attrs, value) => {
@@ -27,21 +32,24 @@ const showTruthyAttrs = async(attrs) => {
   return ' ' + r.join(' ');
 };
 
-const showClass = () => {
-  if (!args.class) return "";
-  if (Array.isArray(args.class)) return ' ' + args.class.join(" ");
-  return ' ' + args.class;
-};
 ?>
-
-<div class="input-group<?=showClass() ?>">
-  <input
-    type="date"
-    <?=showAttrs(['id', 'name', 'title', 'value', 'min', 'max']) ?>
-    <?=showTruthyAttrs(['required', 'disabled']) ?>
-  />
+<div class="input-group">
+  <select
+    <?=showAttrs(['id','title','name']) ?>
+    <?=showTruthyAttrs(['disabled', 'required']) ?>
+  >
+    <option value="" selected></option>
+    <?
+      let i18nKV = yield args.options;
+      for (let key of Object.keys(i18nKV)) {
+      ?>
+        <option value="<?=key ?>"><?=i18nKV[key] ?></option>
+      <?
+      }
+    ?>
+  </select>
   <label>
-    <?= args.label ?>
+    <?=q(args.label) ?>
   </label>
 </div>
 <div class="help-error"><?=q(args.validationError) ?></div>

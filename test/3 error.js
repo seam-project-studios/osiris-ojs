@@ -8,10 +8,10 @@ const fs = require('mz/fs'); // async fs
 const streamBuffers = require('stream-buffers'); // this will hold our template output instead of writing it to a file
 
 // what we're testing
-const ojs = require('../ojs');
+const atjs = require('../atjs');
 
-describe('OJS error tests', () => {
-  describe('render error-eof-tag.ojs', () => {
+describe('ATJS error tests', () => {
+  describe('render error-eof-tag.atjs', () => {
     let output, context, result, error;
 
     beforeEach(async () => {
@@ -19,7 +19,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-eof-tag.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-eof-tag.atjs', context);
       result = output.getContentsAsString('utf8');
     });
 
@@ -30,11 +30,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: Unexpected end of file');
-      expect(error).to.have.string('error-eof-tag.ojs:2');
+      expect(error).to.have.string('error-eof-tag.atjs:2');
     });
   });
 
-  describe('render error-eof-string.ojs', () => {
+  describe('render error-eof-string.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -42,7 +42,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-eof-string.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-eof-string.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -52,11 +52,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: Unexpected end of file');
-      expect(error).to.have.string('error-eof-string.ojs:1');
+      expect(error).to.have.string('error-eof-string.atjs:1');
     });
   });
 
-  describe('render error-bad-string.ojs', () => {
+  describe('render error-bad-string.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -64,7 +64,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-bad-string.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-bad-string.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -74,11 +74,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: Unterminated string constant');
-      expect(error).to.have.string('error-bad-string.ojs:1');
+      expect(error).to.have.string('error-bad-string.atjs:1');
     });
   });
 
-  describe('render error-undefined.ojs', () => {
+  describe('render error-undefined.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -86,7 +86,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-undefined.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-undefined.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -96,11 +96,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('TypeError: undefined is not a function');
-      expect(error).to.have.string('error-undefined.ojs:1');
+      expect(error).to.have.string('error-undefined.atjs:1');
     });
   });
 
-  describe('render context-var.ojs (undefined)', () => {
+  describe('render context-var.atjs (undefined)', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -108,7 +108,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/context-var.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-var.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -118,11 +118,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('ReferenceError: myValue is not defined');
-      expect(error).to.have.string('context-var.ojs:1');
+      expect(error).to.have.string('context-var.atjs:1');
     });
   });
 
-  describe('render context-func.ojs (undefined)', () => {
+  describe('render context-func.atjs (undefined)', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -130,7 +130,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/context-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-func.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -140,11 +140,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('ReferenceError: myFunction is not defined');
-      expect(error).to.have.string('context-func.ojs:1');
+      expect(error).to.have.string('context-func.atjs:1');
     });
   });
 
-  describe('render nonexistent.ojs', () => {
+  describe('render nonexistent.atjs', () => {
     let output, context, caught;
 
     beforeEach(async () => {
@@ -152,7 +152,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/nonexistent.ojs', context);
+      await atjs.renderFile(output, './test/templates/nonexistent.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -162,11 +162,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('filename does not exist');
-      expect(error).to.have.string('nonexistent.ojs');
+      expect(error).to.have.string('nonexistent.atjs');
     });
   });
 
-  describe('render error-syntax.ojs', () => {
+  describe('render error-syntax.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -174,7 +174,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-syntax.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-syntax.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -184,11 +184,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: Unexpected token');
-      expect(error).to.have.string('error-syntax.ojs:2');
+      expect(error).to.have.string('error-syntax.atjs:2');
     });
   });
 
-  describe('render error-throw.ojs', () => {
+  describe('render error-throw.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -196,7 +196,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-throw.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-throw.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -206,11 +206,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: from template');
-      expect(error).to.have.string('error-throw.ojs:1'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
+      expect(error).to.have.string('error-throw.atjs:1'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
     });
   });
 
-  describe('render context-func.ojs (throw)', () => {
+  describe('render context-func.atjs (throw)', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -221,7 +221,7 @@ describe('OJS error tests', () => {
         },
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/context-func.ojs', context);
+      await atjs.renderFile(output, './test/templates/context-func.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -231,11 +231,11 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('Error: from context');
-      expect(error).to.have.string('context-func.ojs:1');
+      expect(error).to.have.string('context-func.atjs:1');
     });
   });
 
-  describe('render error-line-20.ojs', () => {
+  describe('render error-line-20.atjs', () => {
     let output, context;
 
     beforeEach(async () => {
@@ -243,7 +243,7 @@ describe('OJS error tests', () => {
       context = {
         onError: sinon.fake()
       };
-      await ojs.renderFile(output, './test/templates/error-line-20.ojs', context);
+      await atjs.renderFile(output, './test/templates/error-line-20.atjs', context);
     });
 
     it('Should call onError once and on context', () => {
@@ -253,6 +253,6 @@ describe('OJS error tests', () => {
     it('Should call onError with a message indicating error, file and line', () => {
       const error = context.onError.getCall(0).args[0];
       expect(error).to.have.string('ReferenceError: error is not defined');
-      expect(error).to.have.string('error-line-20.ojs:16'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
+      expect(error).to.have.string('error-line-20.atjs:16'); // v8 limitations don't give us line numbers, so this is the start of the code block, not the actual line
     });
   });});

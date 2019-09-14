@@ -1,7 +1,7 @@
 <?
 // arg check
 if (!args.type) {
-  return yield print('input-button.ojs: Error: Expected type argument');
+  return yield print('input-button.atjs: Error: Expected type argument');
 }
 
 const showClass = () => {
